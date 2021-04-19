@@ -1,0 +1,208 @@
+// sass ./static/sass/style.sass ./static/style.css
+// sass --watch ./static/sass/style.sass ./static/style.css
+
+@use 'inputs'
+$tr-time: 300ms
+
+body
+    background-color: lightgrey
+    font-family: 'Quicksand'
+    color: black
+    overflow: hidden
+    // padding: none
+    margin: 0
+
+#nav_bar
+    position: absolute
+    padding: 0px
+    float: right
+    background-color: #24378d
+    list-style-type: none
+    width: 100%
+    font-size: 15px
+    height: 60px
+    .link_nav
+        float: right
+        display: block
+        padding: 0
+        background-color: #24378d
+        color: #d0f0ff
+        width: 10%
+        text-align: center
+        transition: filter 300ms
+        filter: brightness(1)
+        height: 60px
+        &:hover
+            filter: brightness(0.8)
+            cursor: pointer
+    a
+        color: rgb(208, 240, 255)
+        text-decoration: none
+
+.box
+    position: absolute
+    margin: 0
+    width: 50%
+    height: 100%
+    font-weight: bold
+    font-size: 30pt
+    text-align: center
+    filter: brightness(1)
+    transition: filter $tr-time
+
+    &.left
+        background-color: lightblue
+        left: 0
+        top: 0
+
+    &.right
+        background-color: rgb(170, 240, 170)
+        right: 0
+        top: 0
+
+    p
+        margin-top: 50%
+
+    &:hover
+        filter: brightness(0.8)
+        cursor: pointer
+
+$codeInputWidth: 210px
+.enterCode, .enterName
+    margin-top: 100px
+    text-align: center
+    font-family: 'Quicksand'
+    font-size: 30pt
+
+    #text
+        font-weight: bold
+
+    #code
+        margin: 20px
+        width: $codeInputWidth
+
+    #joinRoom
+        height: 53px
+        width: $codeInputWidth
+        background-color: blue
+        color: white
+        text-align: center
+        font-weight: bold
+        left: 50%
+        margin: 0 auto
+        filter: brightness(1)
+        transition: filter $tr-time
+
+        &:hover
+            filter: brightness(0.8)
+            cursor: pointer
+
+.enterName
+    #text
+        font-size: 28pt
+
+#backButton
+    color: #0c74f3
+    position: absolute
+    top: 0px
+    left: 55px
+    filter: brightness(1)
+
+    transform: scale(-1, 1)
+    -moz-transform: scale(-1, 1)
+    -webkit-transform: scale(-1, 1)
+    -o-transform: scale(-1, 1)
+    -ms-transform: scale(-1, 1)
+    transition: filter $tr-time
+    font-size: 30pt
+
+    &:hover
+        filter: brightness(0.8)
+        cursor: pointer
+
+#userName
+    position: absolute
+
+#user_form
+    margin-bottom: 7px
+
+#login_form
+    margin-top: 20px
+    text-align: center
+    margin-left: -70px
+
+#login_header
+    text-align: center
+    margin-top: 53
+    font-size: 30
+
+#sign_in
+    text-align: center
+    margin-top: 53
+    font-size: 30
+
+$text_sec: #acacac
+.gameHeader
+    text-align: center
+    font-size: 30pt
+    color: $text_sec
+    background-color: #1a1e27
+    box-sizing: border-box
+    // width: 110%
+    height: 80px
+    // margin-left: -5%
+    // margin-top: -10px
+
+    #userRank, #userScore, #userName
+        position: absolute
+        top: 10px
+    #userRank
+        left: 20px
+        font-weight: normal
+    #userName
+        left: 50%
+        transform: translate(-50%,0)
+        color: white
+    #userScore
+        right: 20px
+        font-weight: normal
+
+$colors: [#73d3ff, #fff675, #ff89e1, #76f7b0]
+.gameButtons
+    height: calc(100% - 80px)
+    width: 100%
+    background-color: rgb(140, 160, 170)
+
+    .gameButton
+        text-align: center
+        background-color: green
+        height: 25%
+        width: 100%
+        margin: 0px
+        font-weight: bold
+        font-size: 30pt
+        transition: filter $tr-time
+        align-items: center
+        justify-content: center
+
+        p
+            position: relative
+            margin: 0
+            top: 50%
+            transform: translate(0, -50%)
+
+        &:hover
+            filter: brightness(0.8)
+            cursor: pointer
+
+        &#A
+            background-color: nth($colors, 1)
+        &#B
+            background-color: nth($colors, 2)
+        &#C
+            background-color: nth($colors, 3)
+        &#D
+            background-color: nth($colors, 4)
+
+.formFailure
+    font-size: 26pt
