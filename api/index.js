@@ -1,28 +1,28 @@
-const express = require('express');
-const app = express();
-const socketio = require("socket.io")
+const app = require('express')();
+const http = require('http').createServer(app);
+const socketio = require('socket.io');
+// const allowedOrigins = "http://localhost:* http://127.0.0.1:*";
+// const io = socketio(http, { origins: allowedOrigins });
+const io = socketio(http, {
+    cors: {
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST']
+    }
+})
 
-const port = 5000
-
-app.use(express.static('../client/build'));
-
-app.get("/", (req, res) => {
-    res.send("Works")
-});
-
-const server = app.listen(port, () => {
-    console.log("started")
-});
-
-const io = socketio(server);
-
-// io.sockets.on("connection", function (socket) {
-//     
-// });
-
+const rooms = ['1234', 'abcd'];
+function canJoin(room) {
+    return rooms.includes(room);
+}
 io.on('connection', (socket) => {
-    console.log("connected to something");
-
+    console.log("we connected");
+    socket.on('message', (message) => {
+        console.log("received it! " + message);
+        io.emit('message', message);
+    });
+    socket.on('disconnect', () => {
+        console.log("disconnected");
+    });
     socket.on('joinRoom', (room) => {
         if (canJoin(room)) {
             console.log("Someone successfully joined room", room);
@@ -33,12 +33,8 @@ io.on('connection', (socket) => {
             socket.emit("joinRoom", 0);
         }
     });
-
-    socket.on('disconnect', () => {
-        console.log("bye");
-    });
 });
 
-function canJoin(room) {
-    return true;
-}
+http.listen(5000, function () {
+    console.log('listening on port 5000');
+});

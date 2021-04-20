@@ -1,10 +1,13 @@
 import { React, useState, useContext } from 'react';
 import GlobalContext from './GlobalContext';
 import { CreateScreen, CreatorPage, Game, JoinScreen, Login, NameScreen, SignUp, StartScreen } from './pages';
+import UserContext from './context/UserContext';
 
 function Page() {
-    const { page, setPage } = useContext(GlobalContext);
+    const { page } = useContext(GlobalContext);
     // const { user_obj, setUserObj } = React.useContext(UserObjContext);
+    const [username, setUsername] = useState('');
+    const contInfo = { username, setUsername }
 
     return (
         <div>
@@ -14,8 +17,10 @@ function Page() {
             {page === "signup" && (<SignUp></SignUp>)}
             {page === "creator" && (<CreatorPage></CreatorPage>)}
             {page === "join" && (<JoinScreen></JoinScreen>)}
-            {page === "name" && (<NameScreen></NameScreen>)}
-            {page === "game" && (<Game></Game>)}
+            <UserContext.Provider value={contInfo}>
+                {page === "name" && (<NameScreen></NameScreen>)}
+                {page === "game" && (<Game></Game>)}
+            </UserContext.Provider>
         </div>
     );
 }

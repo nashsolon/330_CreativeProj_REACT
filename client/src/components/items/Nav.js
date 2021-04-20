@@ -3,7 +3,7 @@ import { React, useContext } from 'react';
 
 function Nav(props) {
 
-    const { page, setPage } = useContext(GlobalContext);
+    const { setPage } = useContext(GlobalContext);
 
     const name = props.name;
     const action = props.action;

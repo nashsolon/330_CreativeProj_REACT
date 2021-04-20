@@ -4,7 +4,7 @@ import GlobalContext from '../GlobalContext';
 
 function BackButton(props) {
     // const [state, dispatch] = useGlobalState();
-    const { page, setPage } = useContext(GlobalContext);
+    const { setPage } = useContext(GlobalContext);
     return (
         <div onClick={() => setPage(props.page)}><p id="backButton">&#x279C;</p></div>
     );

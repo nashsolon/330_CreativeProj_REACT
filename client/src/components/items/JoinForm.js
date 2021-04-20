@@ -1,5 +1,5 @@
 import GlobalContext from '../GlobalContext';
-import { React, useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 // import { socket } from '../../socket';
 
 
@@ -10,13 +10,15 @@ function JoinForm() {
 
     const [value, setValue] = useState('');
     const [failure, setFailure] = useState(false);
-    const { page, setPage, socket } = useContext(GlobalContext);
+    const { setPage, socket } = useContext(GlobalContext);
 
-    console.log(socket);
+    // console.log(socket);
 
-    socket.on('connect', () => {
-        console.log("um")
-    });
+    // useEffect(() => {
+    //     socket.on('connect', () => {
+    //         console.log("uh")
+    //     });
+    // });
 
     function handleChange(e) {
         setValue(e.target.value);
@@ -24,6 +26,11 @@ function JoinForm() {
     function handleSubmit(e) {
         console.log('Go to room ' + value);
         socket.emit("joinRoom", value);
+
+
+        e.preventDefault();
+    }
+    useEffect(() => {
         socket.once("joinRoom", function (ans) {
             if (ans == 1) {
                 console.log("Let's go!");
@@ -34,9 +41,7 @@ function JoinForm() {
                 setFailure(true);
             }
         });
-
-        e.preventDefault();
-    }
+    }, [socket]);
     return (
         <form onSubmit={handleSubmit}>
             <input id="code" value={value} onChange={handleChange} type="text" maxLength="4"></input>

@@ -4,7 +4,7 @@ import GlobalContext from '../GlobalContext';
 
 function Box(props) {
     // const [state, dispatch] = useGlobalState();
-    const { page, setPage } = useContext(GlobalContext);
+    const { setPage } = useContext(GlobalContext);
 
     const name = props.name;
     const classname = 'box ' + props.just;

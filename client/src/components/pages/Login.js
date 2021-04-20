@@ -5,7 +5,7 @@ import GlobalContext from '../GlobalContext'
 function Login() {
     const [user, setUser] = React.useState("");
     const [pass, setPass] = React.useState("");
-    const { page, setPage } = React.useContext(GlobalContext);
+    const { setPage } = React.useContext(GlobalContext);
 
     function handleUserChange(e) {
         console.log("set user to " + e.target.value)
@@ -17,8 +17,9 @@ function Login() {
     }
     function handleLogin(e) {
         //What to put here slash how do we access user and pass from up there
-        console.log(user)
-        console.log(pass)
+        console.log(user);
+        console.log(pass);
+        setPage('creator');
         e.preventDefault();
     }
     return (
@@ -37,7 +38,7 @@ function Login() {
                     <label>Password</label><input id="pass" onChange={n => handlePassChange(n)} type="text"></input>
                     <br></br>
                 </div>
-                <input id="sign_in" type="submit" value="Login" onClick={n => handleLogin(n)} onClick={() => setPage('creator')}></input>
+                <input id="sign_in" type="submit" value="Login" onClick={n => handleLogin(n)}></input>
                 {/* <GameButtons buttonClick={n => buttonClick(n)}></GameButtons> */}
 
             </form>

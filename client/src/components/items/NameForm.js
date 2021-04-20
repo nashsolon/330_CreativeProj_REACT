@@ -1,21 +1,25 @@
 import GlobalContext from '../GlobalContext';
 import { React, useContext, useState } from 'react';
+import UserContext from '../context/UserContext';
 
 function NameForm() {
     const [value, setValue] = useState('');
     const [failure, setFailure] = useState(false);
-    const { page, setPage } = useContext(GlobalContext);
+    const { setPage } = useContext(GlobalContext);
+    const { setUsername } = useContext(UserContext);
 
     function handleChange(e) {
         setValue(e.target.value);
     }
     function handleSubmit(e) {
+        e.preventDefault();
         if (value == "Nash") {
             setFailure(true);
             console.log("Invalid name");
         }
         else {
             console.log("Name: " + value);
+            setUsername(value);
             setPage('game');
         }
     }
