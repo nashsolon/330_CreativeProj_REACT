@@ -7,9 +7,9 @@ TODO:
 Do different pages on creator page. Need to format page. Name the component CreateGame. Give option to add question and answer.
 
 ## Interactive Quiz Site Rubric
- - 30 pts - Implemented using React, Flask, SCSS/SASS, and Firebase
+ - 30 pts - Implemented using React, Express, SCSS/SASS, and Firebase
    - 10 pts - React
-   - 10 pts - Flask
+   - 10 pts - Express
    - 5 pts - Firebase
    - 5 pts - SCSS/SASS
  - 50 pts - Functionality
