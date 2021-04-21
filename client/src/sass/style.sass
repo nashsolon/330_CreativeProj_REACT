@@ -4,13 +4,17 @@
 @use 'inputs'
 $tr-time: 300ms
 
+html, body
+    height: 100%
+    width: 100%
+    margin: 0
+
 body
     background-color: lightgrey
     font-family: 'Quicksand'
     color: black
     overflow: hidden
     // padding: none
-    margin: 0
 
 #nav_bar
     position: absolute
@@ -170,7 +174,7 @@ $text_sec: #acacac
         right: 20px
         font-weight: normal
 
-$colors: [#73d3ff, #fff675, #ff89e1, #76f7b0]
+$colors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
 .gameButtons
     height: calc(100% - 80px)
     width: 100%
@@ -178,8 +182,9 @@ $colors: [#73d3ff, #fff675, #ff89e1, #76f7b0]
     position: absolute
 
     .gameButton
+        // position: absolute
+        display: block
         text-align: center
-        background-color: green
         height: 25%
         width: 100%
         margin: 0px
@@ -207,6 +212,16 @@ $colors: [#73d3ff, #fff675, #ff89e1, #76f7b0]
             background-color: nth($colors, 3)
         &#D
             background-color: nth($colors, 4)
+        &#O
+            background-color: nth($colors, 5)
 
 .formFailure
     font-size: 26pt
+
+.waiting
+    text-align: center
+    #message
+        position: relative
+        font-size: 26pt
+        text-align: center
+        color: rgb(62, 109, 124)

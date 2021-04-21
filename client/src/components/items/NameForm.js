@@ -18,9 +18,9 @@ function NameForm() {
     }
     useEffect(() => {
         socket.on('join-with-name', (data) => {
-            if (data.res == 1) {
-                console.log("Name: " + value);
-                setUsername(value);
+            if (data.res === 1) {
+                console.log("Name: " + data.name);
+                setUsername(data.name);
                 setPage('game');
             }
             else {
@@ -29,7 +29,7 @@ function NameForm() {
                 setFailure(true);
             }
         });
-    }, [socket]);
+    }, [socket, setUsername, setPage]);
 
     return (
         <form onSubmit={handleSubmit}>

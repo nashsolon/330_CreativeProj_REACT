@@ -21,8 +21,8 @@ function JoinForm() {
         e.preventDefault();
     }
     useEffect(() => {
-        socket.once("joinRoom", function (data) {
-            if (data.res == 1) {
+        socket.on("joinRoom", function (data) {
+            if (data.res === 1) {
                 console.log("Successfully joined room: " + data.room);
                 setRoomcode(data.room);
                 setPage('name');
@@ -32,7 +32,7 @@ function JoinForm() {
                 setFailure(true);
             }
         });
-    }, [socket]);
+    }, [socket, setRoomcode, setPage]);
     return (
         <form onSubmit={handleSubmit}>
             <input id="code" value={value} onChange={handleChange} type="text" maxLength="4"></input>
