@@ -15,24 +15,18 @@ function NameForm() {
         e.preventDefault();
         console.log('Room code: ' + roomcode);
         socket.emit('join-with-name', { name: value, room: roomcode });
-        if (value == "Nash") {
-            setFailure(true);
-            console.log("Invalid name");
-        }
-        else {
-            console.log("Name: " + value);
-            setUsername(value);
-            setPage('game');
-        }
     }
     useEffect(() => {
         socket.on('join-with-name', (data) => {
             if (data.res == 1) {
-
+                console.log("Name: " + value);
+                setUsername(value);
+                setPage('game');
             }
             else {
                 const rsn = data.reason;
                 console.log("Failed: " + rsn);
+                setFailure(true);
             }
         });
     }, [socket]);
