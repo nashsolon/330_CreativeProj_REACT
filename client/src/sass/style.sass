@@ -61,7 +61,10 @@ body
         top: 0
 
     p
-        margin-top: 50%
+        position: relative
+        margin: 0
+        top: 50%
+        transform: translate(0, -50%)
 
     &:hover
         filter: brightness(0.8)
@@ -172,6 +175,7 @@ $colors: [#73d3ff, #fff675, #ff89e1, #76f7b0]
     height: calc(100% - 80px)
     width: 100%
     background-color: rgb(140, 160, 170)
+    position: absolute
 
     .gameButton
         text-align: center

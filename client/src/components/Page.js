@@ -7,7 +7,8 @@ function Page() {
     const { page } = useContext(GlobalContext);
     // const { user_obj, setUserObj } = React.useContext(UserObjContext);
     const [username, setUsername] = useState('');
-    const contInfo = { username, setUsername }
+    const [roomcode, setRoomcode] = useState('');
+    const userContInfo = { username, roomcode, setUsername, setRoomcode }
 
     return (
         <div>
@@ -16,8 +17,8 @@ function Page() {
             {page === "login" && (<Login></Login>)}
             {page === "signup" && (<SignUp></SignUp>)}
             {page === "creator" && (<CreatorPage></CreatorPage>)}
-            {page === "join" && (<JoinScreen></JoinScreen>)}
-            <UserContext.Provider value={contInfo}>
+            <UserContext.Provider value={userContInfo}>
+                {page === "join" && (<JoinScreen></JoinScreen>)}
                 {page === "name" && (<NameScreen></NameScreen>)}
                 {page === "game" && (<Game></Game>)}
             </UserContext.Provider>

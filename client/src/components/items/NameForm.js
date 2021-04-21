@@ -1,18 +1,20 @@
 import GlobalContext from '../GlobalContext';
-import { React, useContext, useState } from 'react';
+import { React, useContext, useEffect, useState } from 'react';
 import UserContext from '../context/UserContext';
 
 function NameForm() {
     const [value, setValue] = useState('');
     const [failure, setFailure] = useState(false);
-    const { setPage } = useContext(GlobalContext);
-    const { setUsername } = useContext(UserContext);
+    const { setPage, socket } = useContext(GlobalContext);
+    const { setUsername, roomcode } = useContext(UserContext);
 
     function handleChange(e) {
         setValue(e.target.value);
     }
     function handleSubmit(e) {
         e.preventDefault();
+        console.log('Room code: ' + roomcode);
+        socket.emit('join-with-name', { name: value, room: roomcode });
         if (value == "Nash") {
             setFailure(true);
             console.log("Invalid name");
@@ -23,6 +25,18 @@ function NameForm() {
             setPage('game');
         }
     }
+    useEffect(() => {
+        socket.on('join-with-name', (data) => {
+            if (data.res == 1) {
+
+            }
+            else {
+                const rsn = data.reason;
+                console.log("Failed: " + rsn);
+            }
+        });
+    }, [socket]);
+
     return (
         <form onSubmit={handleSubmit}>
             <input id="code" value={value} onChange={handleChange} type="text" maxLength="10"></input>
