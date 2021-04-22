@@ -14,7 +14,7 @@ body
     background-color: lightgrey
     font-family: 'Quicksand'
     color: black
-    overflow: hidden
+    // overflow: hidden
     // padding: none
 
 #nav_bar
@@ -39,10 +39,9 @@ body
         height: 60px
         &:hover
             filter: brightness(0.8)
-            cursor: pointer
-    a
-        color: rgb(208, 240, 255)
-        text-decoration: none
+            cursor: pointer 
+        &.on_true
+            background-color: #70be6d
 
 .box
     position: absolute
@@ -72,8 +71,14 @@ body
         transform: translate(0, -50%)
 
     &:hover
-        filter: brightness(0.8)
+        filter: brightness(0.8)ß
         cursor: pointer
+
+#game_creator
+    position: absolute
+    width: 70%
+    height: 70%
+    margin-top: 100px
 
 $codeInputWidth: 210px
 .enterCode, .enterName

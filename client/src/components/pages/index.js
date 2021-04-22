@@ -6,6 +6,10 @@ import Login from './Login';
 import NameScreen from './NameScreen';
 import SignUp from './SignUp';
 import StartScreen from './StartScreen';
-import HostGame from './HostGame';
+import CreateGame from './CreateGame';
+import SavedGames from './SavedGames';
+import StartGame from './StartGame';
+import UserInfo from './UserInfo';
+import HostGame from './UserInfo';
 
-export { CreateScreen, CreatorPage, Game, JoinScreen, Login, NameScreen, SignUp, StartScreen, HostGame }
+export { CreateScreen, CreatorPage, Game, JoinScreen, Login, NameScreen, SignUp, StartScreen, CreateGame, SavedGames, StartGame, UserInfo, HostGame }

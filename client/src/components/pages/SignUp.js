@@ -50,7 +50,7 @@ function SignUp() {
         //         console.log(errorMessage)
         //         // ..
         //     });
-        setPage('creator') //Need to set the new page here because this is asynchronous!!!!! Was firing before this completed before
+        setPage('creator_home') //Need to set the new page here because this is asynchronous!!!!! Was firing before this completed before
 
     }
     return (
