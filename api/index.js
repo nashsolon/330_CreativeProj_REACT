@@ -54,6 +54,15 @@ function joinWithName(name, room, socket) {
     }
 }
 
+function rankPlayers(room) {
+    const info = data.rooms[room].users;
+    const sorted = info.sort((a, b) => {
+        return a.score - b.score;
+    });
+    console.log("Sorted order is:");
+    console.log(sorted);
+}
+
 io.on('connection', (socket) => {
     console.log("user connected");
 
@@ -65,6 +74,27 @@ io.on('connection', (socket) => {
     });
     socket.on('userClick', ({ user, ans }) => {
         console.log(`${user} clicked on ${ans}; is it correct?`);
+        let points;
+        switch (user) {
+            case "Nash":
+                points = 10;
+                break;
+            case "Max":
+                points = 20;
+                break;
+            case "Sasha":
+                points = 100;
+                break;
+            default:
+                points = 50;
+                break;
+        }
+        if (ans === "C") {
+            console.log(`${user} was correct! They earned ${points} points.`);
+            data.rooms[socket.room].users[user].score += points;
+            // console.log(data.rooms[socket.room]);
+        }
+        rankPlayers(socket.room);
     });
     socket.on('startGame', (data) => {
         io.to(data.room).emit('startGame');

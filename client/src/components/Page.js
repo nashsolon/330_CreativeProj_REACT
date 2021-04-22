@@ -4,9 +4,9 @@ import { CreateScreen, CreatorPage, Game, JoinScreen, Login, NameScreen, SignUp,
 import UserContext from './context/UserContext';
 
 function Page() {
-    // const { page } = useContext(GlobalContext);
+    const { page } = useContext(GlobalContext);
     // const page = "hostgame";
-    const { user_obj, setUserObj } = React.useContext(UserObjContext);
+    // const { user_obj, setUserObj } = React.useContext(UserObjContext);
     const [username, setUsername] = useState('');
     const [roomcode, setRoomcode] = useState('');
     const userContInfo = { username, roomcode, setUsername, setRoomcode }
