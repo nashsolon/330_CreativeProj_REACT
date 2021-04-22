@@ -4,13 +4,18 @@
 @use 'inputs'
 $tr-time: 300ms
 
+html, body
+    height: 100%
+    width: 100%
+    margin: 0
+    // min-height: 100%
+
 body
     background-color: lightgrey
     font-family: 'Quicksand'
     color: black
     // overflow: hidden
     // padding: none
-    margin: 0
 
 #nav_bar
     position: absolute
@@ -60,7 +65,10 @@ body
         top: 0
 
     p
-        margin-top: 50%
+        position: relative
+        margin: 0
+        top: 50%
+        transform: translate(0, -50%)
 
     &:hover
         filter: brightness(0.8)ß
@@ -134,3 +142,150 @@ $codeInputWidth: 210px
 #login_form
     margin-top: 20px
     text-align: center
+    margin-left: -70px
+
+#login_header
+    text-align: center
+    margin-top: 53
+    font-size: 30
+
+#sign_in
+    text-align: center
+    margin-top: 53
+    font-size: 30
+
+$text_sec: #acacac
+.gameHeader
+    text-align: center
+    font-size: 30pt
+    color: $text_sec
+    background-color: #1a1e27
+    box-sizing: border-box
+    // width: 110%
+    height: 80px
+    // margin-left: -5%
+    // margin-top: -10px
+
+    #userRank, #userScore, #userName
+        position: absolute
+        top: 10px
+    #userRank
+        left: 20px
+        font-weight: normal
+    #userName
+        left: 50%
+        transform: translate(-50%,0)
+        color: white
+    #userScore
+        right: 20px
+        font-weight: normal
+
+.hostGameHeader
+    text-align: center
+    font-size: 30pt
+    color: $text_sec
+    background-color: #1a1e27
+    top: 0
+    padding: 0
+    // position: absolute
+    box-sizing: border-box
+    // position: absolute
+    // // width: 110%
+    height: 100px
+    // // margin-left: -5%
+    margin: 0
+    p
+        position: relative
+        margin: 0
+        top: 50%
+        transform: translate(0,-50%)
+        color: white
+
+$gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
+.gameButtons
+    height: calc(100% - 80px)
+    width: 100%
+    background-color: rgb(140, 160, 170)
+    position: absolute
+
+    .gameButton
+        // position: absolute
+        display: block
+        text-align: center
+        height: 25%
+        width: 100%
+        margin: 0px
+        font-weight: bold
+        font-size: 30pt
+        transition: filter $tr-time
+        align-items: center
+        justify-content: center
+
+        p
+            position: relative
+            margin: 0
+            top: 50%
+            transform: translate(0, -50%)
+
+        &:hover
+            filter: brightness(0.8)
+            cursor: pointer
+
+        &#A
+            background-color: nth($gameButtonColors, 1)
+        &#B
+            background-color: nth($gameButtonColors, 2)
+        &#C
+            background-color: nth($gameButtonColors, 3)
+        &#D
+            background-color: nth($gameButtonColors, 4)
+        &#O
+            background-color: nth($gameButtonColors, 5)
+
+.gameChoices
+    height: calc(100% - 100px)
+    width: 100%
+    background-color: rgb(140, 160, 170)
+    position: absolute
+
+    .gameChoice
+        // position: absolute
+        display: block
+        text-align: left
+        height: 25%
+        width: 100%
+        margin: 0px
+        font-weight: bold
+        font-size: 30pt
+        transition: filter $tr-time
+        align-items: center
+        justify-content: center
+
+        p
+            position: relative
+            margin: 0
+            margin-left: 50px
+            top: 50%
+            transform: translate(0, -50%)
+
+        &#A
+            background-color: nth($gameButtonColors, 1)
+        &#B
+            background-color: nth($gameButtonColors, 2)
+        &#C
+            background-color: nth($gameButtonColors, 3)
+        &#D
+            background-color: nth($gameButtonColors, 4)
+        &#O
+            background-color: nth($gameButtonColors, 5)
+
+.formFailure
+    font-size: 26pt
+
+.waiting
+    text-align: center
+    #message
+        position: relative
+        font-size: 26pt
+        text-align: center
+        color: rgb(62, 109, 124)

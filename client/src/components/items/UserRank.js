@@ -2,16 +2,25 @@ import React from 'react';
 
 function UserRank(props) {
     let end = "";
-    let dig = props.rank % 10;
-    if (dig == 1)
-        end = "st";
-    else if (dig == 2)
-        end = "nd";
-    else if (dig == 3)
-        end = "rd";
-    else
-        end = "th";
-    let place = props.rank.toString() + end;
+    let dig = parseInt(props.rank, 10) % 10;
+    switch (dig) {
+        case '':
+            end = '';
+            break;
+        case 1:
+            end = "st";
+            break;
+        case 2:
+            end = "nd";
+            break;
+        case 3:
+            end = "rd";
+            break;
+        default:
+            end = "th";
+            break;
+    }
+    let place = props.rank === '' ? '' : props.rank.toString() + end;
     return (
         <strong id="userRank">{place}</strong>
     )

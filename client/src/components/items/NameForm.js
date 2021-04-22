@@ -1,28 +1,36 @@
 import GlobalContext from '../GlobalContext';
-import { React, useContext, useState } from 'react';
+import { React, useContext, useEffect, useState } from 'react';
 import UserContext from '../context/UserContext';
 
 function NameForm() {
     const [value, setValue] = useState('');
     const [failure, setFailure] = useState(false);
-    const { setPage } = useContext(GlobalContext);
-    const { setUsername } = useContext(UserContext);
+    const { setPage, socket } = useContext(GlobalContext);
+    const { setUsername, roomcode } = useContext(UserContext);
 
     function handleChange(e) {
         setValue(e.target.value);
     }
     function handleSubmit(e) {
         e.preventDefault();
-        if (value == "Nash") {
-            setFailure(true);
-            console.log("Invalid name");
-        }
-        else {
-            console.log("Name: " + value);
-            setUsername(value);
-            setPage('game');
-        }
+        console.log('Room code: ' + roomcode);
+        socket.emit('join-with-name', { name: value, room: roomcode });
     }
+    useEffect(() => {
+        socket.on('join-with-name', (data) => {
+            if (data.res === 1) {
+                console.log("Name: " + data.name);
+                setUsername(data.name);
+                setPage('game');
+            }
+            else {
+                const rsn = data.reason;
+                console.log("Failed: " + rsn);
+                setFailure(true);
+            }
+        });
+    }, [socket, setUsername, setPage]);
+
     return (
         <form onSubmit={handleSubmit}>
             <input id="code" value={value} onChange={handleChange} type="text" maxLength="10"></input>
