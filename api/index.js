@@ -22,13 +22,15 @@ const quiz =
     questions: {
         1: { q: 'How many days are in a week?', c: '7', i: ['4', '9', '2'] },
         2: { q: 'How many months are in a year?', c: '12', i: ['10', '14', '24'] }
-    }
-}
+    },
+
+    roomCode: '1234'
+};
 
 function joinRoom(room, socket) {
     const ans = Object.keys(data.rooms).includes(room);
     if (ans) {
-        console.log("Someone successfully joined room", room);
+        console.log(`Someone successfully joined room ${room}`);
         socket.join(room);
         socket.room = room;
         socket.emit("joinRoom", { res: 1, room: room });
@@ -40,7 +42,7 @@ function joinRoom(room, socket) {
 }
 
 function joinWithName(name, room, socket) {
-    console.log('Does room ' + room + ' include ' + name + '?');
+    console.log(`Does room ${room} already include ${name}?`);
     if (data.rooms[room].users.includes(name)) {
         socket.emit('join-with-name', { res: 0, name: name, reason: 'name_taken' });
     }

@@ -6,5 +6,6 @@ import Login from './Login';
 import NameScreen from './NameScreen';
 import SignUp from './SignUp';
 import StartScreen from './StartScreen';
+import HostGame from './HostGame';
 
-export { CreateScreen, CreatorPage, Game, JoinScreen, Login, NameScreen, SignUp, StartScreen }
+export { CreateScreen, CreatorPage, Game, JoinScreen, Login, NameScreen, SignUp, StartScreen, HostGame }

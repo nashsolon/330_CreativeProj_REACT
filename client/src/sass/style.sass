@@ -8,6 +8,7 @@ html, body
     height: 100%
     width: 100%
     margin: 0
+    // min-height: 100%
 
 body
     background-color: lightgrey
@@ -174,7 +175,28 @@ $text_sec: #acacac
         right: 20px
         font-weight: normal
 
-$colors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
+.hostGameHeader
+    text-align: center
+    font-size: 30pt
+    color: $text_sec
+    background-color: #1a1e27
+    top: 0
+    padding: 0
+    // position: absolute
+    box-sizing: border-box
+    // position: absolute
+    // // width: 110%
+    height: 100px
+    // // margin-left: -5%
+    margin: 0
+    p
+        position: relative
+        margin: 0
+        top: 50%
+        transform: translate(0,-50%)
+        color: white
+
+$gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
 .gameButtons
     height: calc(100% - 80px)
     width: 100%
@@ -205,15 +227,52 @@ $colors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
             cursor: pointer
 
         &#A
-            background-color: nth($colors, 1)
+            background-color: nth($gameButtonColors, 1)
         &#B
-            background-color: nth($colors, 2)
+            background-color: nth($gameButtonColors, 2)
         &#C
-            background-color: nth($colors, 3)
+            background-color: nth($gameButtonColors, 3)
         &#D
-            background-color: nth($colors, 4)
+            background-color: nth($gameButtonColors, 4)
         &#O
-            background-color: nth($colors, 5)
+            background-color: nth($gameButtonColors, 5)
+
+.gameChoices
+    height: calc(100% - 100px)
+    width: 100%
+    background-color: rgb(140, 160, 170)
+    position: absolute
+
+    .gameChoice
+        // position: absolute
+        display: block
+        text-align: left
+        height: 25%
+        width: 100%
+        margin: 0px
+        font-weight: bold
+        font-size: 30pt
+        transition: filter $tr-time
+        align-items: center
+        justify-content: center
+
+        p
+            position: relative
+            margin: 0
+            margin-left: 50px
+            top: 50%
+            transform: translate(0, -50%)
+
+        &#A
+            background-color: nth($gameButtonColors, 1)
+        &#B
+            background-color: nth($gameButtonColors, 2)
+        &#C
+            background-color: nth($gameButtonColors, 3)
+        &#D
+            background-color: nth($gameButtonColors, 4)
+        &#O
+            background-color: nth($gameButtonColors, 5)
 
 .formFailure
     font-size: 26pt
