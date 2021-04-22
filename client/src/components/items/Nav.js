@@ -3,11 +3,12 @@ import { React, useContext } from 'react';
 
 function Nav(props) {
 
-    const { setPage } = useContext(GlobalContext);
+    const { page, setPage } = useContext(GlobalContext);
 
     const name = props.name;
     const action = props.action;
-    const classname = 'link_nav ' + props.action;
+    const onPage = props.on;
+    const classname = 'link_nav ' + onPage;
     let navigation = <li onClick={() => setPage(action.toLowerCase())} className={classname}>{name}</li>
     // let thisBox = <div onClick={() => setPage(action.toLowerCase())} className={classname}><p>{name}</p></div>;
     return navigation;
