@@ -251,7 +251,6 @@ function SubmitQuiz(){
     }
     return(
         <button onClick={handleSubmitQuiz}>Submit Quiz</button>
-    )
-}
+)}
 
 export default QuestionBox;
