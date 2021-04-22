@@ -43,7 +43,7 @@ function joinRoom(room, socket) {
 
 function joinWithName(name, room, socket) {
     console.log(`Does room ${room} already include ${name}?`);
-    if (data.rooms[room].users.includes(name)) {
+    if (Object.keys(data.rooms[room].users).includes(name)) {
         socket.emit('join-with-name', { res: 0, name: name, reason: 'name_taken' });
     }
     else {
@@ -56,8 +56,11 @@ function joinWithName(name, room, socket) {
 
 function rankPlayers(room) {
     const info = data.rooms[room].users;
+    console.log("Before:");
+    console.log(info);
     const sorted = info.sort((a, b) => {
-        return a.score - b.score;
+        // console.log(`${a.score}, ${b.score}`);
+        return parseInt(a.score, 10) - parseInt(b.score, 10);
     });
     console.log("Sorted order is:");
     console.log(sorted);
