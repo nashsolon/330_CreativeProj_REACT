@@ -1,9 +1,9 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const socketio = require('socket.io');
-var admin = require("firebase-admin");
+let admin = require("firebase-admin");
 
-var serviceAccount = require("./serviceAccountKey.json");
+let serviceAccount = require("./serviceAccountKey.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -11,7 +11,46 @@ admin.initializeApp({
 });
 // let app = admin.initializeApp();
 
-db = admin.database();
+const db = admin.firestore();
+// console.log(db);
+const getQuiz = async (name) => {
+    const quizzes = db.collection('quizzes');
+    const snapshot = await quizzes.where('name', '==', name).get();
+    if (snapshot.empty) {
+        console.log("uh");
+        return;
+    }
+    snapshot.forEach(doc => {
+        console.log(doc.data());
+    });
+}
+
+const getQuizzesById = async (id) => {
+    const quizzes = db.collection('quizzes');
+    const snap = await quizzes.where('creatorId', '==', id).get();
+    if (snap.empty) {
+        console.log('This user has no quizzes!');
+        return;
+    }
+    let arr = [];
+    snap.forEach(doc => {
+        arr.push(doc.data());
+    });
+    return arr;
+}
+
+// getQuiz('Basic Facts');
+getQuizzesById("1").then(arr => {
+    for (doc of arr) {
+        console.log(doc);
+    }
+});
+
+// .then((docs) => {
+//     docs.forEach(doc => {
+//         console.log(doc.data());
+//     });
+// });
 
 const io = socketio(http, {
     cors: {
@@ -20,7 +59,7 @@ const io = socketio(http, {
     }
 });
 
-const data =
+let data =
 {
     rooms: {
         '1234': { users: [] },
@@ -81,6 +120,7 @@ function rankPlayers(room) {
     console.log(info);
 }
 
+
 io.on('connection', (socket) => {
     console.log("user connected");
     // console.log(firebase);
@@ -122,8 +162,9 @@ io.on('connection', (socket) => {
         }
         rankPlayers(socket.room);
     });
-    socket.on('startGame', (data) => {
-        io.to(data.room).emit('startGame');
+    socket.on('startGame', ({ code }) => {
+        console.log(`Start game: ${code}`);
+        io.to(code).emit('startGame');
     });
     socket.on('creatorSignUp', (data) => {
         console.log(data);

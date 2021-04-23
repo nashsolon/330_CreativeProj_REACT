@@ -53,22 +53,14 @@ function SignUp() {
     return (
         <div>
             <BackButton page='create'> </BackButton>
-            <form id='sigup_form'>
-                <div id="user_sigup_form">
-                    <label>Username</label><input id="user" onChange={n => handleUser(n)} type="text"></input>
-                    <br></br>
-                </div>
-                <div id="email_signup_form">
-                    <label>Email</label><input onChange={n => handleEmail(n)} type="text"></input>
-                    <br></br>
-                </div>
-                <div id="pass_signup_form">
-                    <label>Password</label><input onChange={n => handlePass(n)} type="text"></input>
-                    <br></br>
-                </div>
+            <form id='signup_form'>
+                <input id="email" onChange={n => handleEmail(n)} placeholder="E-mail" type="text"></input>
+                <br></br>
+                <input id="user" placeholder="Username" onChange={n => handleUser(n)} type="text"></input>
+                <br></br>
+                <input id="pass" placeholder="Password" onChange={n => handlePass(n)} type="text"></input>
+                <br></br>
                 <input id="sign_up" type="submit" value="Sign Up" onClick={n => handleSignUp(n)}></input>
-                {/* <GameButtons buttonClick={n => buttonClick(n)}></GameButtons> */}
-
             </form>
         </div>
     )

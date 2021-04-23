@@ -24,7 +24,7 @@ function Waiting(props) {
 
 function Game(props) {
     const [clicked, setClicked] = useState("");
-    const [playing, setPlaying] = useState(true);
+    const [playing, setPlaying] = useState(false);
     const [rank, setRank] = useState('1');
     const [score, setScore] = useState('0');
     const { socket } = useContext(GlobalContext);

@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import GlobalContext from '../GlobalContext';
 
 function HostGameHeader(props) {
     return (
@@ -87,10 +88,27 @@ function PlayerRank(props) {
     );
 }
 
-function Waiting(props) {
+function PlayerBox(props) {
+    if (props.id === "startBtn") {
+        return (
+            <div onClick={props.click} id={props.id} className='playerBox'>
+                <p>{props.name}</p>
+            </div>
+        );
+    }
+    else {
+        return (
+            <div className='playerBox'>
+                <p>{props.name}</p>
+            </div>
+        );
+    }
+}
+
+function Scores(props) {
     const data = props.data;
     let places = data.map((user, index) => {
-        return <PlayerRank rank={rankify(index + 1)} name={user.name} score={user.score}></PlayerRank>
+        return <PlayerRank key={index} rank={rankify(index + 1)} name={user.name} score={user.score}></PlayerRank>
     });
 
     return (
@@ -103,25 +121,59 @@ function Waiting(props) {
     );
 }
 
+function Wait(props) {
+    const data = props.data;
+    let users = data.map((user, index) => {
+        return <PlayerBox key={index} name={user.name}></PlayerBox>
+    });
+
+    return (
+        <div>
+            <HostGameHeader text={`Join with code: ${props.code}`}></HostGameHeader>
+            {/* <div onClick={props.click}>Start</div> */}
+            <div className='playerBoxes'>
+                <PlayerBox click={props.click} id="startBtn" name="Start"></PlayerBox>
+                {users}
+            </div>
+        </div>
+    )
+}
+
 function HostGame() {
-    const q1 = { q: 'How many days are in a week?', a: ['7', '4', '9', '2'] }
+    const { socket } = useContext(GlobalContext);
+
+    const q1 = { q: 'How many days are in a week?', a: ['7', '4', '9', '2'] };
+    const code = '1234';
     const data =
         [
             { name: "Nick", score: 120 },
             { name: "Jason", score: 110 },
             { name: "Paul", score: 50 },
             { name: "Nash", score: 20 },
-            { name: "Max", score: 10 }
+            { name: "Max", score: 10 },
+            { name: "Sasha", score: 8 },
+            { name: "Michael", score: 8 },
+            { name: "Kyle", score: 6 },
+            { name: "Pranay", score: 1 }
         ];
-    const [play, setPlay] = useState(false);
-    if (play) {
+    const [mode, setMode] = useState('wait');
+    const startGame = () => {
+        socket.emit('startGame', { code: code });
+        // setMode('play');
+    };
+    if (mode == 'play') {
         return (
             <InGame data={q1}></InGame>
         );
     }
-    else {
+    else if (mode == 'scores') {
         return (
-            <Waiting data={data}></Waiting>
+            <Scores data={data}></Scores>
+        );
+    }
+    else if (mode == 'wait') {
+        return (
+            <Wait data={data} code={code} click={startGame}></Wait>
         );
     }
 }

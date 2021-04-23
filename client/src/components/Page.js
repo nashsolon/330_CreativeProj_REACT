@@ -26,7 +26,7 @@ function Page() {
             <CreatorContext.Provider value={creatorContInfo}>
                 {page === "hostgame" && (<HostGame></HostGame>)}
                 {page === "login" && (<Login></Login>)}
-                {page === "signup" && (<SignUp></SignUp>)}
+                {page === "sign up" && (<SignUp></SignUp>)}
                 {page === "creator_home" && (<CreatorPage></CreatorPage>)}
                 {page === "create_game" && (<CreateGame></CreateGame>)}
                 {page === "start_game" && (<StartGame></StartGame>)}
