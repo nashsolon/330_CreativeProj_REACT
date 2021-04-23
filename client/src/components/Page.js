@@ -1,6 +1,6 @@
 import { React, useState, useContext } from 'react';
 import GlobalContext from './GlobalContext';
-import { CreateScreen, CreatorPage, Game, JoinScreen, Login, NameScreen, SignUp, StartScreen, CreateGame, SavedGames, StartGame, UserInfo, HostGame} from './pages';
+import { CreateScreen, CreatorPage, Game, JoinScreen, Login, NameScreen, SignUp, StartScreen, CreateGame, SavedGames, StartGame, UserInfo, HostGame } from './pages';
 import UserContext from './context/UserContext';
 
 function Page() {
@@ -19,10 +19,9 @@ function Page() {
             {page === "signup" && (<SignUp></SignUp>)}
             {page === "creator_home" && (<CreatorPage></CreatorPage>)}
             {/* {page === "join" && (<JoinScreen></JoinScreen>)} */}
+            {page === "creator" && (<CreatorPage></CreatorPage>)}
+            {page === "hostgame" && (<HostGame></HostGame>)}
             <UserContext.Provider value={userContInfo}>
-                {page === "creator" && (<CreatorPage></CreatorPage>)}
-                {page === "hostgame" && (<HostGame></HostGame>)}
-                                                    
                 {page === "join" && (<JoinScreen></JoinScreen>)}
                 {page === "name" && (<NameScreen></NameScreen>)}
                 {page === "game" && (<Game></Game>)}

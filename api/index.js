@@ -43,12 +43,19 @@ function joinRoom(room, socket) {
 
 function joinWithName(name, room, socket) {
     console.log(`Does room ${room} already include ${name}?`);
-    if (Object.keys(data.rooms[room].users).includes(name)) {
+    let failure = false;
+    for (user of data.rooms[room].users) {
+        if (user.name === name) {
+            failure = true;
+            break;
+        }
+    }
+    if (failure) {
         socket.emit('join-with-name', { res: 0, name: name, reason: 'name_taken' });
     }
     else {
         socket.username = name;
-        data.rooms[room].users[name] = { score: 0 };
+        data.rooms[room].users.push({ name: name, score: 0 });
         console.log(data.rooms);
         socket.emit('join-with-name', { res: 1, name: name, reason: 'na' });
     }
@@ -56,14 +63,11 @@ function joinWithName(name, room, socket) {
 
 function rankPlayers(room) {
     const info = data.rooms[room].users;
-    console.log("Before:");
-    console.log(info);
-    const sorted = info.sort((a, b) => {
-        // console.log(`${a.score}, ${b.score}`);
-        return parseInt(a.score, 10) - parseInt(b.score, 10);
+    info.sort((a, b) => {
+        return b.score - a.score;
     });
     console.log("Sorted order is:");
-    console.log(sorted);
+    console.log(info);
 }
 
 io.on('connection', (socket) => {
@@ -94,7 +98,13 @@ io.on('connection', (socket) => {
         }
         if (ans === "C") {
             console.log(`${user} was correct! They earned ${points} points.`);
-            data.rooms[socket.room].users[user].score += points;
+            for (this_user of data.rooms[socket.room].users) {
+                if (this_user.name === user) {
+                    this_user.score += points;
+                    break;
+                }
+            }
+            // data.rooms[socket.room].users[user].score += points;
             // console.log(data.rooms[socket.room]);
         }
         rankPlayers(socket.room);

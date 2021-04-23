@@ -10,6 +10,6 @@ import CreateGame from './CreateGame';
 import SavedGames from './SavedGames';
 import StartGame from './StartGame';
 import UserInfo from './UserInfo';
-import HostGame from './UserInfo';
+import HostGame from './HostGame';
 
 export { CreateScreen, CreatorPage, Game, JoinScreen, Login, NameScreen, SignUp, StartScreen, CreateGame, SavedGames, StartGame, UserInfo, HostGame }
