@@ -40,6 +40,36 @@
 
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
+      <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      var firebaseConfig = {
+        apiKey: "AIzaSyDurndzEwOnC_F37eV3DlqtubC8CLfa4cg",
+        authDomain: "quiz-d961a.firebaseapp.com",
+        projectId: "quiz-d961a",
+        storageBucket: "quiz-d961a.appspot.com",
+        messagingSenderId: "939117159928",
+        appId: "1:939117159928:web:48013a6452deae99a3a20d",
+        measurementId: "G-EBC41P964R"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth()
+      const db = firebase.firestore()
+      // firebase.analytics();
+    
+    </script>
+    
+    <script src = '../../client/src/components/pages/SignUp.js'> </script>
     -->
   </body>
 </html>

@@ -27,13 +27,15 @@ function QuestionBox(props) {
                 'incorrect3':''
             }}
         });
-    const questionInfo = { count, setCount, q_object, setQ_Object, q_object_store, setQ_Object_Store };
+        const [quiz_name, setQuizName] = useState('');
+    const questionInfo = { count, setCount, q_object, setQ_Object, q_object_store, setQ_Object_Store, quiz_name, setQuizName };
 
     // let questionBox = <div className={classname}><p>{q_text_value}</p></div>;
 
     return (
         <div>
             <QuestionContext.Provider value = {questionInfo}>
+                <NameQuiz></NameQuiz>
                 <AddQuestion></AddQuestion>
                 <ClickedComponents></ClickedComponents>
                 <SubmitQuiz></SubmitQuiz>
@@ -244,14 +246,39 @@ function AddQuestion(){
     )
 }
 
-function SubmitQuiz(){
-    const { q_object_store } = useContext(QuestionContext);
-    function handleSubmitQuiz(){
-        console.log(q_object_store);
+function NameQuiz(){
+    const {quiz_name, setQuizName } = useContext(QuestionContext);
+    function handleNameQuiz(e){
+        setQuizName(e.target.value)
+    }
+    function handleSubmitName(){
+        console.log(quiz_name);
     }
     return(
+        <div>
+            <label>Name Quiz: </label><input type = 'text' onChange={handleNameQuiz}></input>
+            {/* <button onClick={handleSubmitName}>Save Name </button> */}
+        </div>
+)}
+
+function SubmitQuiz(){
+    const { page, setPage, socket } = useContext(GlobalContext);
+    const { q_object_store, quiz_name } = useContext(QuestionContext);
+    function handleSubmitQuiz(){
+        console.log("The name of your quiz is " + quiz_name)
+        console.log(q_object_store);
+
+        socket.emit('submit_quiz', {'quiz' : q_object_store, 'quiz_name' : quiz_name})
+
+        
+    }
+
+    useEffect(() => {
+        // socket.
+    })
+    return(
+        
         <button onClick={handleSubmitQuiz}>Submit Quiz</button>
-    )
-}
+)}
 
 export default QuestionBox;

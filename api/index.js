@@ -1,6 +1,17 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const socketio = require('socket.io');
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://quiz.firebaseio.com'
+});
+// let app = admin.initializeApp();
+
+db = admin.database();
 
 const io = socketio(http, {
     cors: {
@@ -72,6 +83,8 @@ function rankPlayers(room) {
 
 io.on('connection', (socket) => {
     console.log("user connected");
+    // console.log(firebase);
+   
 
     socket.on('joinRoom', (room) => {
         joinRoom(room, socket);
@@ -112,6 +125,58 @@ io.on('connection', (socket) => {
     socket.on('startGame', (data) => {
         io.to(data.room).emit('startGame');
     });
+    socket.on('creatorSignUp', (data) => {
+        console.log(data);
+        // console.log(db);
+        admin
+            .auth()
+            .createUser({
+                email: data.signin_email,
+                emailVerified: false,
+                
+                password: data.signin_pass,
+                displayName: data.signin_user
+            })
+            .then((userRecord) => {
+                // See the UserRecord reference doc for the contents of userRecord.
+                let data = {'signin': true} 
+                socket.emit('creatorSignUp', data)
+                console.log('Successfully created new user:', userRecord.uid);
+            })
+            .catch((error) => {
+                console.log('Error creating new user:', error);
+                err_message = error.message;
+                socket.emit('creatorSignUp', {'signin': false, 'err_message': err_message})
+            });
+    })
+
+    socket.on('submit_quiz', (data) => {
+        console.log(data);
+        // console.log(db);
+        // admin
+        //     .auth()
+        //     .createUser({
+        //         email: data.signin_email,
+        //         emailVerified: false,
+                
+        //         password: data.signin_pass,
+        //         displayName: data.signin_user
+        //     })
+        //     .then((userRecord) => {
+        //         // See the UserRecord reference doc for the contents of userRecord.
+        //         let data = {'signin': true} 
+        //         socket.emit('creatorSignUp', data)
+        //         console.log('Successfully created new user:', userRecord.uid);
+        //     })
+        //     .catch((error) => {
+        //         console.log('Error creating new user:', error);
+        //         err_message = error.message;
+        //         socket.emit('creatorSignUp', {'signin': false, 'err_message': err_message})
+        //     });
+
+    })
+            
+   
 
     socket.on('disconnect', () => {
         if (socket.room) {

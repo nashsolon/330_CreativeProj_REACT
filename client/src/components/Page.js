@@ -2,6 +2,7 @@ import { React, useState, useContext } from 'react';
 import GlobalContext from './GlobalContext';
 import { CreateScreen, CreatorPage, Game, JoinScreen, Login, NameScreen, SignUp, StartScreen, CreateGame, SavedGames, StartGame, UserInfo, HostGame } from './pages';
 import UserContext from './context/UserContext';
+import CreatorContext from './context/CreatorContext';
 
 function Page() {
     const { page } = useContext(GlobalContext);
@@ -9,27 +10,29 @@ function Page() {
     // const { user_obj, setUserObj } = React.useContext(UserObjContext);
     const [username, setUsername] = useState('');
     const [roomcode, setRoomcode] = useState('');
+    const [creator, setCreator] = useState('')
     const userContInfo = { username, roomcode, setUsername, setRoomcode }
+    const creatorContInfo = { creator, setCreator }
 
     return (
         <div>
             {page === "start" && (<StartScreen></StartScreen>)}
             {page === "create" && (<CreateScreen></CreateScreen>)}
-            {page === "login" && (<Login></Login>)}
-            {page === "signup" && (<SignUp></SignUp>)}
-            {page === "creator_home" && (<CreatorPage></CreatorPage>)}
-            {/* {page === "join" && (<JoinScreen></JoinScreen>)} */}
-            {page === "creator" && (<CreatorPage></CreatorPage>)}
-            {page === "hostgame" && (<HostGame></HostGame>)}
             <UserContext.Provider value={userContInfo}>
                 {page === "join" && (<JoinScreen></JoinScreen>)}
                 {page === "name" && (<NameScreen></NameScreen>)}
                 {page === "game" && (<Game></Game>)}
             </UserContext.Provider>
-            {page === "create_game" && (<CreateGame></CreateGame>)}
-            {page === "start_game" && (<StartGame></StartGame>)}
-            {page === "user_info" && (<UserInfo></UserInfo>)}
-            {page === "saved_games" && (<SavedGames></SavedGames>)}
+            <CreatorContext.Provider value={creatorContInfo}>
+                {page === "hostgame" && (<HostGame></HostGame>)}
+                {page === "login" && (<Login></Login>)}
+                {page === "signup" && (<SignUp></SignUp>)}
+                {page === "creator_home" && (<CreatorPage></CreatorPage>)}
+                {page === "create_game" && (<CreateGame></CreateGame>)}
+                {page === "start_game" && (<StartGame></StartGame>)}
+                {page === "user_info" && (<UserInfo></UserInfo>)}
+                {page === "saved_games" && (<SavedGames></SavedGames>)}
+            </CreatorContext.Provider>
         </div>
     );
 }

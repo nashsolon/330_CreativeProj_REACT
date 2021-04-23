@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@react-firebase/auth": "^0.2.10",
+    "firebase": "^8.4.1"
+  }
+}
