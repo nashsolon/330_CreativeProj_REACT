@@ -11,7 +11,7 @@ const socket = io.connect('http://localhost:5000');
 // const socket = io();
 
 function App() {
-  const [page, setPage] = useState('creator_home');
+  const [page, setPage] = useState('start');
   const contextInfo = { page, setPage, socket };
 
   useEffect(() => {

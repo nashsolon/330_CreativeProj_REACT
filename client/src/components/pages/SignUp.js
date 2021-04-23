@@ -1,12 +1,15 @@
 import GlobalContext from '../GlobalContext';
-import { React, useState, useContext } from 'react';
+import { React, useState, useContext, useEffect } from 'react';
 import { BackButton } from '../items';
+import CreatorContext from '../context/CreatorContext';
 
 function SignUp() {
+    
     const [signin_user, setUser] = useState("");
     const [signin_email, setEmail] = useState("");
     const [signin_pass, setPass] = useState("");
-    const { page, setPage } = useContext(GlobalContext);
+    const { page, setPage, socket } = useContext(GlobalContext);
+    const { creator, setCreator } = useContext(CreatorContext);
 
 
     function handleUser(e) {
@@ -23,36 +26,30 @@ function SignUp() {
     }
     function handleSignUp(e) {
         //What to put here slash how do we access user and pass from up there
-        console.log(signin_user)
-        console.log(signin_email)
-        console.log(signin_pass)
+        // console.log(signin_user)
+        // console.log(signin_email)
+        // console.log(signin_pass)
         // console.log(firebase)
+        let signup_object = {'signin_user': signin_user, 'signin_email': signin_email, 'signin_pass': signin_pass }
         e.preventDefault();
-
-        // firebase.auth().createUserWithEmailAndPassword(signin_email, signin_pass)
-        //     // userCredential is the promise (response) from createUser... function
-        //     .then((userCredential) => {
-        //         // Signed in 
-        //         let user = userCredential.user;
-        //         console.log(user)
-        //         user.updateProfile({
-        //             displayName: signin_user
-        //         })
-
-        //         // ...
-        //     })
-        //     .catch((error) => {
-        //         let errorCode = error.code;
-
-        //         let errorMessage = error.message;
-        //         console.log("You have not been signed up")
-        //         console.log(errorCode)
-        //         console.log(errorMessage)
-        //         // ..
-        //     });
-        setPage('creator_home') //Need to set the new page here because this is asynchronous!!!!! Was firing before this completed before
+        socket.emit('creatorSignUp', signup_object)
+        // setPage('creator_home')
 
     }
+
+    useEffect(() => {
+        socket.on("creatorSignUp", function (data) {
+            console.log(data);
+            if(data.signin == true){
+                setPage('creator_home') //Need to set the new page here because this is asynchronous!!!!! Was firing before this completed before
+            }
+            else{
+                console.log('invalid sign in becase...' + data.err_message)
+            }
+        });
+        
+    }, [socket]);
+ 
     return (
         <div>
             <BackButton page='create'> </BackButton>
