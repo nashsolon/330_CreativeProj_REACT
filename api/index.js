@@ -6,8 +6,8 @@ var admin = require("firebase-admin");
 var serviceAccount = require("./serviceAccountKey.json");
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://quiz.firebaseio.com'
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://quiz.firebaseio.com'
 });
 // let app = admin.initializeApp();
 
@@ -84,7 +84,7 @@ function rankPlayers(room) {
 io.on('connection', (socket) => {
     console.log("user connected");
     // console.log(firebase);
-   
+
 
     socket.on('joinRoom', (room) => {
         joinRoom(room, socket);
@@ -133,20 +133,20 @@ io.on('connection', (socket) => {
             .createUser({
                 email: data.signin_email,
                 emailVerified: false,
-                
+
                 password: data.signin_pass,
                 displayName: data.signin_user
             })
             .then((userRecord) => {
                 // See the UserRecord reference doc for the contents of userRecord.
-                let data = {'signin': true} 
+                let data = { 'signin': true }
                 socket.emit('creatorSignUp', data)
                 console.log('Successfully created new user:', userRecord.uid);
             })
             .catch((error) => {
                 console.log('Error creating new user:', error);
                 err_message = error.message;
-                socket.emit('creatorSignUp', {'signin': false, 'err_message': err_message})
+                socket.emit('creatorSignUp', { 'signin': false, 'err_message': err_message })
             });
     })
 
@@ -158,7 +158,7 @@ io.on('connection', (socket) => {
         //     .createUser({
         //         email: data.signin_email,
         //         emailVerified: false,
-                
+
         //         password: data.signin_pass,
         //         displayName: data.signin_user
         //     })
@@ -175,8 +175,8 @@ io.on('connection', (socket) => {
         //     });
 
     })
-            
-   
+
+
 
     socket.on('disconnect', () => {
         if (socket.room) {

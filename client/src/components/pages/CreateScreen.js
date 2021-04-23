@@ -5,7 +5,7 @@ function CreateScreen() {
         <div>
             <h1>Create</h1>
             <Box name="Login" just="right"></Box>
-            <Box name="SignUp" just="left"></Box>
+            <Box name="Sign Up" just="left"></Box>
             <BackButton page="start"></BackButton>
         </div>
     )
