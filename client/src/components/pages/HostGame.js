@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import GlobalContext from '../GlobalContext';
 
 function HostGameHeader(props) {
     return (
@@ -54,11 +55,127 @@ function InGame(props) {
     )
 }
 
-function HostGame() {
-    const q1 = { q: 'How many days are in a week?', a: ['7', '4', '9', '2'] }
+function rankify(place) {
+    let dig = parseInt(place, 10) % 10;
+    let end;
+    switch (dig) {
+        case '':
+            end = '';
+            break;
+        case 1:
+            end = "st";
+            break;
+        case 2:
+            end = "nd";
+            break;
+        case 3:
+            end = "rd";
+            break;
+        default:
+            end = "th";
+            break;
+    }
+    return place + end;
+}
+
+function PlayerRank(props) {
     return (
-        <InGame data={q1}></InGame>
+        <div className='playerRank'>
+            <span className='rank'>{props.rank}</span>
+            <span className='name'>{props.name}</span>
+            <span className='score'>{props.score}</span>
+        </div>
     );
+}
+
+function PlayerBox(props) {
+    if (props.id === "startBtn") {
+        return (
+            <div onClick={props.click} id={props.id} className='playerBox'>
+                <p>{props.name}</p>
+            </div>
+        );
+    }
+    else {
+        return (
+            <div className='playerBox'>
+                <p>{props.name}</p>
+            </div>
+        );
+    }
+}
+
+function Scores(props) {
+    const data = props.data;
+    let places = data.map((user, index) => {
+        return <PlayerRank key={index} rank={rankify(index + 1)} name={user.name} score={user.score}></PlayerRank>
+    });
+
+    return (
+        <div>
+            <HostGameHeader text={'Scores'}></HostGameHeader>
+            <div className='playerRanks'>
+                {places}
+            </div>
+        </div>
+    );
+}
+
+function Wait(props) {
+    const data = props.data;
+    let users = data.map((user, index) => {
+        return <PlayerBox key={index} name={user.name}></PlayerBox>
+    });
+
+    return (
+        <div>
+            <HostGameHeader text={`Join with code: ${props.code}`}></HostGameHeader>
+            {/* <div onClick={props.click}>Start</div> */}
+            <div className='playerBoxes'>
+                <PlayerBox click={props.click} id="startBtn" name="Start"></PlayerBox>
+                {users}
+            </div>
+        </div>
+    )
+}
+
+function HostGame() {
+    const { socket } = useContext(GlobalContext);
+
+    const q1 = { q: 'How many days are in a week?', a: ['7', '4', '9', '2'] };
+    const code = '1234';
+    const data =
+        [
+            { name: "Nick", score: 120 },
+            { name: "Jason", score: 110 },
+            { name: "Paul", score: 50 },
+            { name: "Nash", score: 20 },
+            { name: "Max", score: 10 },
+            { name: "Sasha", score: 8 },
+            { name: "Michael", score: 8 },
+            { name: "Kyle", score: 6 },
+            { name: "Pranay", score: 1 }
+        ];
+    const [mode, setMode] = useState('wait');
+    const startGame = () => {
+        socket.emit('startGame', { code: code });
+        // setMode('play');
+    };
+    if (mode == 'play') {
+        return (
+            <InGame data={q1}></InGame>
+        );
+    }
+    else if (mode == 'scores') {
+        return (
+            <Scores data={data}></Scores>
+        );
+    }
+    else if (mode == 'wait') {
+        return (
+            <Wait data={data} code={code} click={startGame}></Wait>
+        );
+    }
 }
 
 export default HostGame;

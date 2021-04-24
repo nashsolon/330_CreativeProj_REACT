@@ -19,29 +19,19 @@ function Login() {
         //What to put here slash how do we access user and pass from up there
         console.log(user);
         console.log(pass);
-        setPage('creator');
+        setPage('creator_home');
         e.preventDefault();
     }
     return (
-        <div>
-
-            <div id='login_header'>
-                <strong>Login Screen</strong>
-                <BackButton page='create'> </BackButton>
-            </div>
+        <div className="loginForm">
             <form id='login_form'>
-                <div id="user_form">
-                    <label>Username</label><input id="user" onChange={n => handleUserChange(n)} type="text"></input>
-                    <br></br>
-                </div>
-                <div id="pass_form">
-                    <label>Password</label><input id="pass" onChange={n => handlePassChange(n)} type="text"></input>
-                    <br></br>
-                </div>
+                <input id="user" placeholder="Username" onChange={n => handleUserChange(n)} type="text"></input>
+                <br></br>
+                <input id="pass" placeholder="Password" onChange={n => handlePassChange(n)} type="password"></input>
+                <br></br>
                 <input id="sign_in" type="submit" value="Login" onClick={n => handleLogin(n)}></input>
-                {/* <GameButtons buttonClick={n => buttonClick(n)}></GameButtons> */}
-
             </form>
+            <BackButton page='create'> </BackButton>
         </div>
     )
 }

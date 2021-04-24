@@ -39,7 +39,7 @@ body
         height: 60px
         &:hover
             filter: brightness(0.8)
-            cursor: pointer 
+            cursor: pointer
         &.on_true
             background-color: #70be6d
 
@@ -81,7 +81,7 @@ body
     margin-top: 100px
 
 $codeInputWidth: 210px
-.enterCode, .enterName
+.enterCode, .enterName, .loginForm
     margin-top: 100px
     text-align: center
     font-family: 'Quicksand'
@@ -95,6 +95,60 @@ $codeInputWidth: 210px
         width: $codeInputWidth
 
     #joinRoom
+        height: 53px
+        width: $codeInputWidth
+        background-color: blue
+        color: white
+        text-align: center
+        font-weight: bold
+        left: 50%
+        margin: 0 auto
+        filter: brightness(1)
+        transition: filter $tr-time
+
+        &:hover
+            filter: brightness(0.8)
+            cursor: pointer
+$signUpWidth: $codeInputWidth + 100px
+#signup_form
+    margin-top: 100px
+    text-align: center
+    font-family: 'Quicksand'
+    font-size: 30pt
+
+    #user, #email, #pass
+        margin: 15px
+        width: $signUpWidth
+
+    #sign_up
+        height: 53px
+        width: $signUpWidth
+        background-color: blue
+        color: white
+        text-align: center
+        font-weight: bold
+        left: 50%
+        margin: 0 auto
+        margin-top: 10px
+        filter: brightness(1)
+        transition: filter $tr-time
+
+        &:hover
+            filter: brightness(0.8)
+            cursor: pointer
+#login_form
+    margin-top: 100px
+    text-align: center
+    font-family: 'Quicksand'
+    font-size: 30pt
+
+    #pass
+        margin: 20px
+
+    #user, #pass
+        width: $codeInputWidth
+
+    #sign_in
         height: 53px
         width: $codeInputWidth
         background-color: blue
@@ -289,6 +343,79 @@ $gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
         font-size: 26pt
         text-align: center
         color: rgb(62, 109, 124)
+
+.playerRanks
+    margin: 0
+    top: 20px
+    position: relative
+    left: 50%
+    transform: translate(-50%, 0)
+    width: 50%
+    height: 500px
+
+    color: white
+    font-weight: bold
+    text-align: center
+    font-size: 20pt
+    // padding: 20px
+    .playerRank:first-of-type
+        background-color: rgb(138, 192, 138)
+    .playerRank:nth-child(2),
+    .playerRank:nth-child(3),
+    .playerRank:nth-child(4),
+    .playerRank:nth-child(5)
+        background-color: #bd8383
+    .playerRank
+        background-color: rgb(85, 173, 189)
+        margin: 20px
+        padding: 10px
+        box-shadow: 7px 7px 10px rgb(150, 150, 150)
+
+        .rank
+            margin-left: 30px
+            position: absolute
+            left: 0
+        .name
+            position: relative
+        .score
+            margin-right: 30px
+            position: absolute
+            right: 0
+
+.playerBoxes
+    margin: 0
+    top: 20px
+    position: relative
+    left: 50%
+    transform: translate(-50%, 0)
+    width: 50%
+    height: 500px
+
+    color: white
+    font-weight: bold
+    text-align: center
+    font-size: 20pt
+    // padding: 20px
+    .playerBox:nth-child(odd)
+        background-color: rgb(54, 121, 133)
+    .playerBox
+        height: 50px
+        background-color: rgb(85, 173, 189)
+        margin: 20px
+        box-shadow: 7px 7px 10px rgb(150, 150, 150)
+        // padding: 0px
+        p
+            position: relative
+            margin: 0
+            top: 50%
+            transform: translate(0, -50%)
+
+#startBtn
+    background-color: rgb(138, 192, 138)
+    transition: filter $tr-time
+    &:hover
+        filter: brightness(0.8)
+        cursor: pointer
 
 .creator_question
     font-size: 15pt

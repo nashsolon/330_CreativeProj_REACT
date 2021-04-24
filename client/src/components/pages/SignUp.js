@@ -1,15 +1,15 @@
 import GlobalContext from '../GlobalContext';
 import { React, useState, useContext, useEffect } from 'react';
 import { BackButton } from '../items';
-import CreatorContext from '../context/CreatorContext';
+// import CreatorContext from '../context/CreatorContext';
 
 function SignUp() {
-    
+
     const [signin_user, setUser] = useState("");
     const [signin_email, setEmail] = useState("");
     const [signin_pass, setPass] = useState("");
-    const { page, setPage, socket } = useContext(GlobalContext);
-    const { creator, setCreator } = useContext(CreatorContext);
+    const { setPage, socket } = useContext(GlobalContext);
+    // const { creator, setCreator } = useContext(CreatorContext);
 
 
     function handleUser(e) {
@@ -30,7 +30,7 @@ function SignUp() {
         // console.log(signin_email)
         // console.log(signin_pass)
         // console.log(firebase)
-        let signup_object = {'signin_user': signin_user, 'signin_email': signin_email, 'signin_pass': signin_pass }
+        let signup_object = { 'signin_user': signin_user, 'signin_email': signin_email, 'signin_pass': signin_pass }
         e.preventDefault();
         socket.emit('creatorSignUp', signup_object)
         // setPage('creator_home')
@@ -40,35 +40,27 @@ function SignUp() {
     useEffect(() => {
         socket.on("creatorSignUp", function (data) {
             console.log(data);
-            if(data.signin == true){
+            if (data.signin == true) {
                 setPage('creator_home') //Need to set the new page here because this is asynchronous!!!!! Was firing before this completed before
             }
-            else{
+            else {
                 console.log('invalid sign in becase...' + data.err_message)
             }
         });
-        
-    }, [socket]);
- 
+
+    }, [socket, setPage]);
+
     return (
         <div>
             <BackButton page='create'> </BackButton>
-            <form id='sigup_form'>
-                <div id="user_sigup_form">
-                    <label>Username</label><input id="user" onChange={n => handleUser(n)} type="text"></input>
-                    <br></br>
-                </div>
-                <div id="email_signup_form">
-                    <label>Email</label><input onChange={n => handleEmail(n)} type="text"></input>
-                    <br></br>
-                </div>
-                <div id="pass_signup_form">
-                    <label>Password</label><input onChange={n => handlePass(n)} type="text"></input>
-                    <br></br>
-                </div>
+            <form id='signup_form'>
+                <input id="email" onChange={n => handleEmail(n)} placeholder="E-mail" type="text"></input>
+                <br></br>
+                <input id="user" placeholder="Username" onChange={n => handleUser(n)} type="text"></input>
+                <br></br>
+                <input id="pass" placeholder="Password" onChange={n => handlePass(n)} type="text"></input>
+                <br></br>
                 <input id="sign_up" type="submit" value="Sign Up" onClick={n => handleSignUp(n)}></input>
-                {/* <GameButtons buttonClick={n => buttonClick(n)}></GameButtons> */}
-
             </form>
         </div>
     )

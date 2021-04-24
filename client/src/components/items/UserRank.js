@@ -23,7 +23,7 @@ function UserRank(props) {
     let place = props.rank === '' ? '' : props.rank.toString() + end;
     return (
         <strong id="userRank">{place}</strong>
-    )
+    );
 }
 
 export default UserRank;

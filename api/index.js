@@ -1,17 +1,56 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const socketio = require('socket.io');
-var admin = require("firebase-admin");
+let admin = require("firebase-admin");
 
-var serviceAccount = require("./serviceAccountKey.json");
+let serviceAccount = require("./serviceAccountKey.json");
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://quiz.firebaseio.com'
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://quiz.firebaseio.com'
 });
 // let app = admin.initializeApp();
 
-db = admin.database();
+const db = admin.firestore();
+// console.log(db);
+const getQuiz = async (name) => {
+    const quizzes = db.collection('quizzes');
+    const snapshot = await quizzes.where('name', '==', name).get();
+    if (snapshot.empty) {
+        console.log("uh");
+        return;
+    }
+    snapshot.forEach(doc => {
+        console.log(doc.data());
+    });
+}
+
+const getQuizzesById = async (id) => {
+    const quizzes = db.collection('quizzes');
+    const snap = await quizzes.where('creatorId', '==', id).get();
+    if (snap.empty) {
+        console.log('This user has no quizzes!');
+        return;
+    }
+    let arr = [];
+    snap.forEach(doc => {
+        arr.push(doc.data());
+    });
+    return arr;
+}
+
+// getQuiz('Basic Facts');
+getQuizzesById("1").then(arr => {
+    for (doc of arr) {
+        console.log(doc);
+    }
+});
+
+// .then((docs) => {
+//     docs.forEach(doc => {
+//         console.log(doc.data());
+//     });
+// });
 
 const io = socketio(http, {
     cors: {
@@ -20,7 +59,7 @@ const io = socketio(http, {
     }
 });
 
-const data =
+let data =
 {
     rooms: {
         '1234': { users: [] },
@@ -54,21 +93,38 @@ function joinRoom(room, socket) {
 
 function joinWithName(name, room, socket) {
     console.log(`Does room ${room} already include ${name}?`);
-    if (data.rooms[room].users.includes(name)) {
+    let failure = false;
+    for (user of data.rooms[room].users) {
+        if (user.name === name) {
+            failure = true;
+            break;
+        }
+    }
+    if (failure) {
         socket.emit('join-with-name', { res: 0, name: name, reason: 'name_taken' });
     }
     else {
         socket.username = name;
-        data.rooms[room].users[name] = { score: 0 };
+        data.rooms[room].users.push({ name: name, score: 0 });
         console.log(data.rooms);
         socket.emit('join-with-name', { res: 1, name: name, reason: 'na' });
     }
 }
 
+function rankPlayers(room) {
+    const info = data.rooms[room].users;
+    info.sort((a, b) => {
+        return b.score - a.score;
+    });
+    console.log("Sorted order is:");
+    console.log(info);
+}
+
+
 io.on('connection', (socket) => {
     console.log("user connected");
     // console.log(firebase);
-   
+
 
     socket.on('joinRoom', (room) => {
         joinRoom(room, socket);
@@ -78,9 +134,37 @@ io.on('connection', (socket) => {
     });
     socket.on('userClick', ({ user, ans }) => {
         console.log(`${user} clicked on ${ans}; is it correct?`);
+        let points;
+        switch (user) {
+            case "Nash":
+                points = 10;
+                break;
+            case "Max":
+                points = 20;
+                break;
+            case "Sasha":
+                points = 100;
+                break;
+            default:
+                points = 50;
+                break;
+        }
+        if (ans === "C") {
+            console.log(`${user} was correct! They earned ${points} points.`);
+            for (this_user of data.rooms[socket.room].users) {
+                if (this_user.name === user) {
+                    this_user.score += points;
+                    break;
+                }
+            }
+            // data.rooms[socket.room].users[user].score += points;
+            // console.log(data.rooms[socket.room]);
+        }
+        rankPlayers(socket.room);
     });
-    socket.on('startGame', (data) => {
-        io.to(data.room).emit('startGame');
+    socket.on('startGame', ({ code }) => {
+        console.log(`Start game: ${code}`);
+        io.to(code).emit('startGame');
     });
     socket.on('creatorSignUp', (data) => {
         console.log(data);
@@ -90,20 +174,20 @@ io.on('connection', (socket) => {
             .createUser({
                 email: data.signin_email,
                 emailVerified: false,
-                
+
                 password: data.signin_pass,
                 displayName: data.signin_user
             })
             .then((userRecord) => {
                 // See the UserRecord reference doc for the contents of userRecord.
-                let data = {'signin': true} 
+                let data = { 'signin': true }
                 socket.emit('creatorSignUp', data)
                 console.log('Successfully created new user:', userRecord.uid);
             })
             .catch((error) => {
                 console.log('Error creating new user:', error);
                 err_message = error.message;
-                socket.emit('creatorSignUp', {'signin': false, 'err_message': err_message})
+                socket.emit('creatorSignUp', { 'signin': false, 'err_message': err_message })
             });
     })
 
@@ -115,7 +199,7 @@ io.on('connection', (socket) => {
         //     .createUser({
         //         email: data.signin_email,
         //         emailVerified: false,
-                
+
         //         password: data.signin_pass,
         //         displayName: data.signin_user
         //     })
@@ -132,8 +216,8 @@ io.on('connection', (socket) => {
         //     });
 
     })
-            
-   
+
+
 
     socket.on('disconnect', () => {
         if (socket.room) {
