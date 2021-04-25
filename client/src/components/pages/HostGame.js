@@ -124,7 +124,7 @@ function Scores(props) {
 function Wait(props) {
     const data = props.data;
     console.log("Waiting...")
-    console.log(data);
+    // console.log(data);
     let users;
     if (data) {
         users = data.map((user, index) => {
@@ -147,8 +147,12 @@ function Wait(props) {
 function HostGame() {
     const { socket } = useContext(GlobalContext);
 
-    const q1 = { q: 'How many days are in a week?', a: ['7', '4', '9', '2'] };
+    const [qs, setQs] = useState();
     const code = '1234';
+
+
+    socket.emit('hostGame', code);
+
     const [data, setData] = useState();
     //     { name: "Nick", score: 120 },
     //     { name: "Jason", score: 110 },
@@ -167,19 +171,20 @@ function HostGame() {
         // setMode('play');
     };
     useState(() => {
-        socket.on('startGame', () => {
+        socket.on('startGame', (question) => {
+            setQs({ q: question.q, a: question.a });
             setMode('play');
         });
     }, [socket, setMode]);
     useState(() => {
-        socket.on('playerJoin', ({ players }) => {
+        socket.on('playerChange', ({ players }) => {
             console.log(players);
             setData(players);
         });
     }, [socket, setData]);
     if (mode == 'play') {
         return (
-            <InGame data={q1}></InGame>
+            <InGame data={qs}></InGame>
         );
     }
     else if (mode == 'scores') {

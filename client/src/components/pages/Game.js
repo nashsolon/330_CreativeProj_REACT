@@ -29,9 +29,11 @@ function Game(props) {
     const [score, setScore] = useState('0');
     const { socket } = useContext(GlobalContext);
     const { username } = useContext(UserContext);
+    const [corr, setCorr] = useState(-1);
 
     useEffect(() => {
-        socket.on('startGame', () => {
+        socket.on('startGame', ({ c }) => {
+            setCorr(c);
             setClicked("");
             setPlaying(true);
         });
@@ -40,7 +42,9 @@ function Game(props) {
     const userClick = ((n) => {
         if (clicked === "") {
             setClicked(n);
-            socket.emit('userClick', { user: username, ans: n });
+            console.log(corr + ' ' + n);
+            let correct = corr === n;
+            socket.emit('userClick', { user: username, ans: correct });
         }
     });
 
