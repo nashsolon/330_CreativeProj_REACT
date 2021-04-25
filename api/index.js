@@ -15,7 +15,7 @@ const db = admin.firestore();
 // console.log(db);
 const getQuiz = async (name) => {
     const quizzes = db.collection('quizzes');
-    const snapshot = await quizzes.where('name', '==', name).get();
+    const snapshot = await quizzes.where('quiz_name', '==', name).get();
     if (snapshot.empty) {
         console.log("uh");
         return;
@@ -27,7 +27,7 @@ const getQuiz = async (name) => {
 
 const getQuizzesById = async (id) => {
     const quizzes = db.collection('quizzes');
-    const snap = await quizzes.where('creatorId', '==', id).get();
+    const snap = await quizzes.where('creatorID', '==', id).get();
     if (snap.empty) {
         console.log('This user has no quizzes!');
         return;
@@ -40,11 +40,11 @@ const getQuizzesById = async (id) => {
 }
 
 // getQuiz('Basic Facts');
-getQuizzesById("1").then(arr => {
-    for (doc of arr) {
-        console.log(doc);
-    }
-});
+// getQuizzesById("1").then(arr => {
+//     for (doc of arr) {
+//         console.log(doc);
+//     }
+// });
 
 // .then((docs) => {
 //     docs.forEach(doc => {
@@ -162,10 +162,12 @@ io.on('connection', (socket) => {
         }
         rankPlayers(socket.room);
     });
+
     socket.on('startGame', ({ code }) => {
         console.log(`Start game: ${code}`);
         io.to(code).emit('startGame');
     });
+
     socket.on('creatorSignUp', (data) => {
         console.log(data);
         // console.log(db);
@@ -191,29 +193,28 @@ io.on('connection', (socket) => {
             });
     })
 
+    socket.once('get_quizzes', (data) => {
+        getQuizzesById(data.creator).then(arr => {
+            for (doc of arr) {
+                console.log(doc);
+            }
+            socket.emit('get_quizzes', {'quiz_arr': arr})
+        });
+        
+        
+        });
+
     socket.on('submit_quiz', (data) => {
         console.log(data);
-        // console.log(db);
-        // admin
-        //     .auth()
-        //     .createUser({
-        //         email: data.signin_email,
-        //         emailVerified: false,
+        const quizzes = db.collection('quizzes');
+        quizzes.add({
+            quiz: data.quiz,
+            quiz_name: data.quiz_name,
+            creatorID: data.creator
+          });
 
-        //         password: data.signin_pass,
-        //         displayName: data.signin_user
-        //     })
-        //     .then((userRecord) => {
-        //         // See the UserRecord reference doc for the contents of userRecord.
-        //         let data = {'signin': true} 
-        //         socket.emit('creatorSignUp', data)
-        //         console.log('Successfully created new user:', userRecord.uid);
-        //     })
-        //     .catch((error) => {
-        //         console.log('Error creating new user:', error);
-        //         err_message = error.message;
-        //         socket.emit('creatorSignUp', {'signin': false, 'err_message': err_message})
-        //     });
+        
+        
 
     })
 

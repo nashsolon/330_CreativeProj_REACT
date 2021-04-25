@@ -12,7 +12,7 @@ function SavedGames(props) {
                 <Nav on = 'on_false' action='start_game' name='Start a Game'></Nav>
                 <Nav on = 'on_true' action='saved_games' name='Saved Games'></Nav>
                 <Nav on = 'on_false' action='user_info' name='User Info'></Nav>
-                <Nav on = 'on_false' action='home' name='Home'></Nav>
+                <Nav on = 'on_false' action='creator_home' name='Home'></Nav>
                     {/* <li className = 'link_nav'><a href="create.jsx">Create</a></li>
                     <li className = 'link_nav'><a href="start.jsx">Start a Game</a></li>
                     <li className = 'link_nav'><a href="saved.jsx">Saved Games</a></li>
