@@ -101,13 +101,19 @@ function joinWithName(name, room, socket) {
         }
     }
     if (failure) {
+        console.log("Name taken");
         socket.emit('join-with-name', { res: 0, name: name, reason: 'name_taken' });
     }
     else {
         socket.username = name;
+        console.log("Name available");
         data.rooms[room].users.push({ name: name, score: 0 });
         console.log(data.rooms);
         socket.emit('join-with-name', { res: 1, name: name, reason: 'na' });
+        console.log('Here we are')
+        console.log(data.rooms[room].users);
+        //io.to(room)
+        io.emit('playerJoin', { players: data.rooms[room].users })
     }
 }
 
@@ -164,7 +170,8 @@ io.on('connection', (socket) => {
     });
     socket.on('startGame', ({ code }) => {
         console.log(`Start game: ${code}`);
-        io.to(code).emit('startGame');
+        // io.to(code)
+        io.emit('startGame');
     });
     socket.on('creatorSignUp', (data) => {
         console.log(data);
@@ -221,8 +228,8 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         if (socket.room) {
-            // data.rooms[socket.room].users = data.rooms[socket.room].users.filter((x) => x != socket.username);
-            delete data.rooms[socket.room].users[socket.username];
+            data.rooms[socket.room].users = data.rooms[socket.room].users.filter((x) => x.name != socket.username);
+            // delete data.rooms[socket.room].users[socket.username];
             console.log(`${socket.username} disconnected from ${socket.room}`);
         }
     });

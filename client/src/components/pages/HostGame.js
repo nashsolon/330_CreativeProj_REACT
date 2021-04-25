@@ -123,9 +123,14 @@ function Scores(props) {
 
 function Wait(props) {
     const data = props.data;
-    let users = data.map((user, index) => {
-        return <PlayerBox key={index} name={user.name}></PlayerBox>
-    });
+    console.log("Waiting...")
+    console.log(data);
+    let users;
+    if (data) {
+        users = data.map((user, index) => {
+            return <PlayerBox key={index} name={user.name}></PlayerBox>
+        });
+    }
 
     return (
         <div>
@@ -144,23 +149,34 @@ function HostGame() {
 
     const q1 = { q: 'How many days are in a week?', a: ['7', '4', '9', '2'] };
     const code = '1234';
-    const data =
-        [
-            { name: "Nick", score: 120 },
-            { name: "Jason", score: 110 },
-            { name: "Paul", score: 50 },
-            { name: "Nash", score: 20 },
-            { name: "Max", score: 10 },
-            { name: "Sasha", score: 8 },
-            { name: "Michael", score: 8 },
-            { name: "Kyle", score: 6 },
-            { name: "Pranay", score: 1 }
-        ];
+    const [data, setData] = useState();
+    //     { name: "Nick", score: 120 },
+    //     { name: "Jason", score: 110 },
+    //     { name: "Paul", score: 50 },
+    //     { name: "Nash", score: 20 },
+    //     { name: "Max", score: 10 },
+    //     { name: "Sasha", score: 8 },
+    //     { name: "Michael", score: 8 },
+    //     { name: "Kyle", score: 6 },
+    //     { name: "Pranay", score: 1 }
+    // ]);
+    // console.log(data)
     const [mode, setMode] = useState('wait');
     const startGame = () => {
         socket.emit('startGame', { code: code });
         // setMode('play');
     };
+    useState(() => {
+        socket.on('startGame', () => {
+            setMode('play');
+        });
+    }, [socket, setMode]);
+    useState(() => {
+        socket.on('playerJoin', ({ players }) => {
+            console.log(players);
+            setData(players);
+        });
+    }, [socket, setData]);
     if (mode == 'play') {
         return (
             <InGame data={q1}></InGame>

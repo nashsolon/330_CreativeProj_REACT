@@ -33,7 +33,7 @@ function NameForm() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <input id="code" value={value} onChange={handleChange} type="text" maxLength="10"></input>
+            <input id="code" value={value} onChange={handleChange} type="text" maxLength="15"></input>
             <br></br>
             <input id="joinRoom" type="submit" value="Join"></input>
             <br></br>
