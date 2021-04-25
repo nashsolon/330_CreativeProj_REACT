@@ -17,7 +17,7 @@ function Page() {
     return (
         <div>
             {page === "start" && (<StartScreen></StartScreen>)}
-            {page === "create" && (<CreateScreen></CreateScreen>)}
+            {page === "create" && (<CreateScreen></CreateScreen>)} {/*(<HostGame></HostGame>)*/}
             <UserContext.Provider value={userContInfo}>
                 {page === "join" && (<JoinScreen></JoinScreen>)}
                 {page === "name" && (<NameScreen></NameScreen>)}
