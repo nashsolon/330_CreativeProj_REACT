@@ -1,5 +1,6 @@
 import { React, useContext, useState, createContext, useEffect } from 'react';
 import GlobalContext from '../GlobalContext';
+import CreatorContext from '../context/CreatorContext';
 
 const QuestionContext= createContext();
 function QuestionBox(props) {
@@ -264,11 +265,13 @@ function NameQuiz(){
 function SubmitQuiz(){
     const { page, setPage, socket } = useContext(GlobalContext);
     const { q_object_store, quiz_name } = useContext(QuestionContext);
+    const { creator } = useContext(CreatorContext);
     function handleSubmitQuiz(){
         console.log("The name of your quiz is " + quiz_name)
+        console.log('The creator id of the quiz is ' + creator)
         console.log(q_object_store);
 
-        socket.emit('submit_quiz', {'quiz' : q_object_store, 'quiz_name' : quiz_name})
+        socket.emit('submit_quiz', {'quiz' : q_object_store, 'quiz_name' : quiz_name, creator: creator})
 
         
     }
