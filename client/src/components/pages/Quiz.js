@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
+import GlobalContext from '../GlobalContext';
+import CreatorContext from '../context/CreatorContext';
 
 const QuizContext = createContext();
 
@@ -20,7 +22,10 @@ function Question(props) {
         setQuiz(temp);
     }
 
+
+
     return (
+        
         <div className='question'>
             <p className='qTitle'>Question</p>
             <input type='text' value={quiz.questions[i].q} onChange={(e) => handleChange('q', e.target.value)}></input>
@@ -34,6 +39,7 @@ function Question(props) {
             <input type='text' value={quiz.questions[i].i3} onChange={(e) => handleChange('i3', e.target.value)}></input>
             <p id='delete' onClick={() => deleteQuestion(i)}>&#215;</p>
         </div>
+        
     );
 }
 
@@ -60,6 +66,62 @@ function AddQuestion() {
             <p>+</p>
         </div>
     );
+}
+
+function QuizName() {
+    const { quiz, setQuiz } = useContext(QuizContext);
+
+    const handleNameChange = (change) => {
+        let temp = JSON.parse(JSON.stringify(quiz));
+        temp.name = change;
+        setQuiz(temp);
+        
+    };
+    
+
+    return (
+        <div id = 'quiz_name'>
+            <p className = 'quiz_name'> Quiz Name </p>
+            <input type='text' value={quiz.name} onChange={(e) => handleNameChange(e.target.value)}></input>
+        </div>
+    );
+}
+
+function SubmitQuiz() {
+    const { socket } = useContext(GlobalContext);
+    const { quiz, setQuiz } = useContext(QuizContext);
+    const { creator } = useContext(CreatorContext);
+    
+
+
+
+    function handleSubmitQuiz() {
+        let gen_code = Math.floor(Math.random()*10000)
+        console.log(gen_code)
+        
+        
+
+        let temp = JSON.parse(JSON.stringify(quiz));
+        temp.creatorId = creator;
+        temp.roomCode = gen_code;
+        setQuiz(temp);
+
+
+
+        socket.emit('submit_quiz', { quiz })
+
+
+    }
+    
+    console.log(quiz)
+
+    useEffect(() => {
+        // socket.
+    })
+    return (
+
+        <button onClick={handleSubmitQuiz}>Submit Quiz</button>
+    )
 }
 
 function Quiz() {
@@ -101,9 +163,11 @@ function Quiz() {
     return (
         <QuizContext.Provider value={{ quiz, setQuiz }}>
             <div className='questions'>
+                <QuizName></QuizName>
                 {quiz.questions[0] && questionsComp}
                 {!quiz.questions[0] && (<LooksEmpty></LooksEmpty>)}
                 <AddQuestion></AddQuestion>
+                <SubmitQuiz></SubmitQuiz>
                 <br></br>
             </div>
         </QuizContext.Provider>

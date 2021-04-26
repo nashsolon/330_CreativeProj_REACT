@@ -26,7 +26,7 @@ function ManagerHeader(){
 
     return(
         <div>
-            {creator_name}
+            {header_text}
         </div>
     )
 }

@@ -37,8 +37,12 @@ function QuizBox(props) {
 }
 
 function Quiz(props) {
+    function handleQuizClick (){
+        console.log('The quiz you clicked on is ' + props.quiz_name)
+        console.log('It\'s object is ' + JSON.stringify(props.quiz_obj))
+    }
     return (
-        <div className = 'quiz_box'>
+        <div className = 'quiz_box' onClick={handleQuizClick}>
             {props.quiz_name}
         </div>
     )
@@ -51,11 +55,12 @@ function ClickableQuizzes(props) {
     // const { count, setCount, q_object, setQ_Object } = useContext(QuestionContext);
     function handleQuizClick (){
         // socket.emit('')
+        console.log('The quiz you clicked is ' + props.quiz_name)
     }
     const div_quizzes = Object.keys(quizzes).map(key =>
 
         
-        <Quiz key={key} quiz_name={quizzes[key].quiz_name} onClick={handleQuizClick}></Quiz>
+        <Quiz key={key} quiz_name={quizzes[key].quiz_name} quiz_obj={quizzes[key]}></Quiz>
 
 
     )
