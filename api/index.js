@@ -271,22 +271,36 @@ io.on('connection', (socket) => {
 
     socket.once('get_quizzes', (data) => {
         getQuizzesById(data.creator).then(arr => {
-            for (doc of arr) {
-                console.log(doc);
-            }
+            // for (doc of arr) {
+            //     console.log(doc);
+            // }
+            console.log('You are trying to get your quizzes....')
             socket.emit('get_quizzes', {'quiz_arr': arr})
         });
         
         
         });
 
-    socket.on('submit_quiz', (data) => {
+    socket.on('getUsername', (data) => {
+        console.log('User id is ' + data.creator)
+        admin
+        .auth()
+        .getUser(data.creator)
+        .then((userRecord) => {
+            // See the UserRecord reference doc for the contents of userRecord.
+            console.log('Successfully fetched user data:' + userRecord);
+            socket.emit('getUsername', {user_obj: userRecord})
+        })
+        .catch((error) => {
+            console.log('Error fetching user data:', error);
+        });
+            })
+
+    socket.on('submit_quiz', ({temp}) => {
         console.log(data);
         const quizzes = db.collection('quizzes');
         quizzes.add({
-            quiz: data.quiz,
-            quiz_name: data.quiz_name,
-            creatorID: data.creator
+            temp 
           });
 
         

@@ -29,7 +29,8 @@ function Page() {
                 {page === "sign up" && (<SignUp></SignUp>)}
                 {page === "creator_home" && (<CreatorPage></CreatorPage>)}
                 {page === "create_game" && (<CreateGame></CreateGame>)}
-                {page === "start_game" && (<StartGame></StartGame>)}
+                {page === "create a game" && (<Quiz></Quiz>)}
+                {page === "manage/start games" && (<StartGame></StartGame>)}
                 {page === "user_info" && (<UserInfo></UserInfo>)}
                 {page === "saved_games" && (<SavedGames></SavedGames>)}
             </CreatorContext.Provider>

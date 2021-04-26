@@ -10,5 +10,6 @@ import UserName from './UserName';
 import UserRank from './UserRank';
 import UserScore from './UserScore';
 import QuestionBox from './QuestionBox';
+import QuizBox from './QuizBox';
 
-export { BackButton, Box, GameButton, GameButtons, GameHeader, JoinForm, NameForm, Nav, UserName, UserRank, UserScore, QuestionBox };
+export { BackButton, Box, GameButton, GameButtons, GameHeader, JoinForm, NameForm, Nav, UserName, UserRank, UserScore, QuestionBox, QuizBox };
