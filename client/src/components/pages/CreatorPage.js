@@ -2,22 +2,14 @@ import { Nav } from '../items';
 import { React, useContext, useEffect } from 'react'
 import GlobalContext from '../GlobalContext';
 import CreatorContext from '../context/CreatorContext';
+import { QuizBox } from '../items';
 
 
 // import React from 'react';
 
 function CreatorPage(props) {
     // const { page, setPage } = useContext(GlobalContext);
-    const { socket } = useContext(GlobalContext);
-    const { creator } = useContext(CreatorContext);
-
-    socket.emit('get_quizzes', {'creator': creator})
-
-    useEffect(() => {
-        socket.on("get_quizzes", function (data) {
-            console.log(data)
-        });
-    }, [socket]);
+    
 
     return (
         <div>
@@ -32,8 +24,9 @@ function CreatorPage(props) {
                     <li className = 'link_nav'><a href="saved.jsx">Saved Games</a></li>
                     <li className = 'link_nav'><a href="user.jsx">User Info</a></li> */}`
             </nav>
-            <div id="welcome">
-                Welcome,
+            <div id="quizzes">
+                    <QuizBox></QuizBox>
+               
             </div>
         </div>
     );

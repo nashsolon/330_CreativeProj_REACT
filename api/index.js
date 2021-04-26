@@ -202,9 +202,10 @@ io.on('connection', (socket) => {
 
     socket.once('get_quizzes', (data) => {
         getQuizzesById(data.creator).then(arr => {
-            for (doc of arr) {
-                console.log(doc);
-            }
+            // for (doc of arr) {
+            //     console.log(doc);
+            // }
+            console.log('You are trying to get your quizzes....')
             socket.emit('get_quizzes', {'quiz_arr': arr})
         });
         
