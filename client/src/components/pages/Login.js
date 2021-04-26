@@ -13,10 +13,10 @@ var firebaseConfig = {
     messagingSenderId: "939117159928",
     appId: "1:939117159928:web:48013a6452deae99a3a20d",
     measurementId: "G-EBC41P964R"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth()
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth()
 
 function Login() {
     const [failure, setFailure] = useState(false);
@@ -35,7 +35,7 @@ function Login() {
     }
     function handleLogin(e) {
         //What to put here slash how do we access user and pass from up there
-        
+
         console.log(email);
         console.log(pass);
         e.preventDefault();
@@ -44,22 +44,22 @@ function Login() {
         // setPage('creator_home');
 
         auth.signInWithEmailAndPassword(email, pass)
-        .then(userInfo => {
+            .then(userInfo => {
 
-            console.log(userInfo);
-            console.log(userInfo.user.uid)
-            setCreator(userInfo.user.uid)
-            setPage('creator_home');
-        })
-        .catch((error) => {
-            setFailure(true);
-            console.log(error.message);
+                console.log(userInfo);
+                console.log(userInfo.user.uid)
+                setCreator(userInfo.user.uid)
+                setPage('creator_home');
+            })
+            .catch((error) => {
+                setFailure(true);
+                console.log(error.message);
 
-        })
-            
-        
+            })
 
-       
+
+
+
     }
 
     // useEffect(() => {

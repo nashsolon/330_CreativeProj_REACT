@@ -13,7 +13,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 // console.log(db);
-const getQuiz = async (name) => {
+const getQuizByName = async (name) => {
     const quizzes = db.collection('quizzes');
     const snapshot = await quizzes.where('quiz_name', '==', name).get();
     if (snapshot.empty) {
@@ -23,7 +23,27 @@ const getQuiz = async (name) => {
     snapshot.forEach(doc => {
         console.log(doc.data());
     });
-}
+};
+
+const getQuizByCode = async (code) => {
+    const quizzes = db.collection('quizzes');
+    const snap = await quizzes.where('roomCode', '==', code).get();
+    if (snap.empty) {
+        console.log(`No quiz found with code ${code}`);
+        return;
+    }
+    let quiz;
+    snap.forEach(doc => {
+        quiz = doc.data();
+    });
+    return quiz;
+    // console.log(snap[0].data());
+    // return snap[0];
+};
+
+// getQuizByCode("1234").then(doc => {
+//     console.log(doc);
+// });
 
 const getQuizzesById = async (id) => {
     const quizzes = db.collection('quizzes');
@@ -62,20 +82,49 @@ const io = socketio(http, {
 let data =
 {
     rooms: {
-        '1234': { users: [] },
+        '1111': {
+            users: [],
+            questions: {
+                '1': {
+                    i2: '9',
+                    i3: '2',
+                    q: 'How many days are in a week?',
+                    i1: '4',
+                    c: '7'
+                },
+                '2': {
+                    i2: '16',
+                    i1: '9',
+                    i3: '3',
+                    c: '12',
+                    q: 'How many months are in a year?'
+                },
+                '3': {
+                    i3: 'Mt. Nash',
+                    c: 'Mt. Everest',
+                    q: "What's the tallest mountain in the world?",
+                    i2: 'Mt. Denali',
+                    i1: 'K2'
+                }
+            }
+        },
         'abcd': { users: [] }
     }
 };
 
-const quiz =
-{
-    questions: {
-        1: { q: 'How many days are in a week?', c: '7', i: ['4', '9', '2'] },
-        2: { q: 'How many months are in a year?', c: '12', i: ['10', '14', '24'] }
-    },
+// const quiz =
+// {
+//     questions: {
+//         1: { q: 'How many days are in a week?', c: '7', i: ['4', '9', '2'] },
+//         2: { q: 'How many months are in a year?', c: '12', i: ['10', '14', '24'] }
+//     },
 
-    roomCode: '1234'
-};
+//     roomCode: '1234'
+// };
+
+function shuffle(array) {
+    array.sort(() => Math.random() - 0.5);
+}
 
 function joinRoom(room, socket) {
     const ans = Object.keys(data.rooms).includes(room);
@@ -113,7 +162,7 @@ function joinWithName(name, room, socket) {
         console.log('Here we are')
         console.log(data.rooms[room].users);
         //io.to(room)
-        io.emit('playerJoin', { players: data.rooms[room].users })
+        io.emit('playerChange', { players: data.rooms[room].users })
     }
 }
 
@@ -139,7 +188,7 @@ io.on('connection', (socket) => {
         joinWithName(name, room, socket);
     });
     socket.on('userClick', ({ user, ans }) => {
-        console.log(`${user} clicked on ${ans}; is it correct?`);
+        // console.log(`${user} clicked on ${ans}; is it correct?`);
         let points;
         switch (user) {
             case "Nash":
@@ -155,7 +204,7 @@ io.on('connection', (socket) => {
                 points = 50;
                 break;
         }
-        if (ans === "C") {
+        if (ans) {
             console.log(`${user} was correct! They earned ${points} points.`);
             for (this_user of data.rooms[socket.room].users) {
                 if (this_user.name === user) {
@@ -166,13 +215,33 @@ io.on('connection', (socket) => {
             // data.rooms[socket.room].users[user].score += points;
             // console.log(data.rooms[socket.room]);
         }
+        else {
+            console.log(`${user} was incorrect :(`);
+        }
         rankPlayers(socket.room);
     });
 
     socket.on('startGame', ({ code }) => {
         console.log(`Start game: ${code}`);
         // io.to(code)
-        io.emit('startGame');
+        let round = '2';
+        // { q: 'How many days are in a week?', a: ['7', '4', '9', '2'] }
+        let { q, c, i1, i2, i3 } = data.rooms[code].questions[round];
+        let temp = [c, i1, i2, i3];
+        console.log(temp);
+        shuffle(temp);
+        console.log(temp);
+        let question = { q: q, a: temp, c: temp.indexOf(c) }
+        io.emit('startGame', question);
+    });
+    socket.on('hostGame', (code) => {
+        getQuizByCode(code).then(quiz => {
+            data.rooms[code] = quiz;
+            delete data.rooms[code].roomCode;
+            data.rooms[code].users = [];
+            data.rooms[code].stats = { round: 1 };
+            console.log(data);
+        });
     });
 
     socket.on('creatorSignUp', (data) => {
@@ -233,6 +302,7 @@ io.on('connection', (socket) => {
             data.rooms[socket.room].users = data.rooms[socket.room].users.filter((x) => x.name != socket.username);
             // delete data.rooms[socket.room].users[socket.username];
             console.log(`${socket.username} disconnected from ${socket.room}`);
+            io.emit('playerChange', { players: data.rooms[socket.room].users })
         }
     });
 });
