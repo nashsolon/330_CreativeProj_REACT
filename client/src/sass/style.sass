@@ -384,6 +384,8 @@ $gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
             position: absolute
             right: 0
 
+$shadow: 7px 7px 10px rgb(150, 150, 150)
+
 .playerBoxes
     margin: 0
     top: 20px
@@ -404,7 +406,7 @@ $gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
         height: 50px
         background-color: rgb(85, 173, 189)
         margin: 20px
-        box-shadow: 7px 7px 10px rgb(150, 150, 150)
+        box-shadow: $shadow
         // padding: 0px
         p
             position: relative
@@ -412,8 +414,10 @@ $gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
             top: 50%
             transform: translate(0, -50%)
 
+$buttonGreen: rgb(138, 192, 138)
+
 #startBtn
-    background-color: rgb(138, 192, 138)
+    background-color: $buttonGreen
     transition: filter $tr-time
     &:hover
         filter: brightness(0.8)
@@ -421,3 +425,96 @@ $gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
 
 .creator_question
     font-size: 15pt
+
+$questionWidth: 60%
+.questions
+    // display: flex
+    // text-align:
+    // position: absolute
+    // justify-content: center
+    // align-items: center
+
+    .noQs
+        color: white
+        width: 100%
+        // background-color: blue
+
+        text-align: center
+        font-size: 30pt
+        font-weight: bold
+        p
+            // position: relative
+            // left: 50%
+    .addQuestion
+        width: $questionWidth
+        background-color: $buttonGreen
+        box-shadow: $shadow
+        margin: 50px
+        position: relative
+        height: 60px
+        left: 50%
+        transform: translate(-50%, 0)
+        text-align: center
+        color: white
+        font-size: 35pt
+        font-weight: bold
+        transition: filter $tr-time
+
+        &:hover
+            cursor: pointer
+            filter: brightness(0.8)
+
+        p
+            margin: 0
+            position: relative
+            top: -5px
+
+    .question
+        background-color: #9393d1
+        margin: 50px
+        position: relative
+        left: 50%
+        transform: translate(-50%, 0)
+        width: $questionWidth
+        padding: 20px
+        box-shadow: $shadow
+
+        // height: 600px
+        // white-space: pre
+
+        #delete
+            // box-sizing: border-box
+            -webkit-user-select: none
+            -moz-user-select: none
+            -ms-user-select: none
+            user-select: none
+
+            font-size: 35pt
+            position: absolute
+            margin: 0
+            top: 22px
+            right: 42px
+            transition: filter $tr-time
+
+            &:hover
+                filter: brightness(0.8)
+                cursor: pointer
+
+        p
+            margin: 20px
+            color: #e7e7e7
+            font-weight: bold
+            font-size: 25px
+
+        .qTitle
+            font-size: 30px
+
+        input
+            // position: relative
+            // left: 50%
+            // transform: translate(-50%, 0)
+            border-bottom: 3px solid #e7e7e7
+            background-color: #FFFFFF00
+            font-size: 22pt
+            margin: 20px
+            width: 80%
