@@ -281,6 +281,21 @@ io.on('connection', (socket) => {
         
         });
 
+    socket.on('getUsername', (data) => {
+        console.log('User id is ' + data.creator)
+        admin
+        .auth()
+        .getUser(data.creator)
+        .then((userRecord) => {
+            // See the UserRecord reference doc for the contents of userRecord.
+            console.log('Successfully fetched user data:' + userRecord);
+            socket.emit('getUsername', {user_obj: userRecord})
+        })
+        .catch((error) => {
+            console.log('Error fetching user data:', error);
+        });
+            })
+
     socket.on('submit_quiz', (data) => {
         console.log(data);
         const quizzes = db.collection('quizzes');

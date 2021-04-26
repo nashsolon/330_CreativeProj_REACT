@@ -8,7 +8,7 @@ import SignUp from './SignUp';
 import StartScreen from './StartScreen';
 import CreateGame from './CreateGame';
 import SavedGames from './SavedGames';
-import StartGame from './StartGame';
+import StartGame from './ManageGames';
 import UserInfo from './UserInfo';
 import HostGame from './HostGame';
 import Quiz from './Quiz';
