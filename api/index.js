@@ -296,11 +296,11 @@ io.on('connection', (socket) => {
         });
             })
 
-    socket.on('submit_quiz', ({quiz}) => {
+    socket.on('submit_quiz', ({temp}) => {
         console.log(data);
         const quizzes = db.collection('quizzes');
         quizzes.add({
-            quiz 
+            temp 
           });
 
         

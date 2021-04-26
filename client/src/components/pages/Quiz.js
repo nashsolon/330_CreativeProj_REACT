@@ -98,20 +98,16 @@ function SubmitQuiz() {
     function handleSubmitQuiz() {
         let gen_code = Math.floor(Math.random()*10000)
         console.log(gen_code)
-        
-        
 
         let temp = JSON.parse(JSON.stringify(quiz));
         temp.creatorId = creator;
         temp.roomCode = gen_code;
         setQuiz(temp);
 
-
-
-        socket.emit('submit_quiz', { quiz })
-
+        socket.emit('submit_quiz', { temp })
 
     }
+    
     
     console.log(quiz)
 
