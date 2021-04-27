@@ -45,12 +45,12 @@ const getQuizByCode = async (code) => {
 //     console.log(doc);
 // });
 
-const getQuizzesById = async (id) => {
+const getQuizzesByCreatorId = async (id) => {
     const quizzes = db.collection('quizzes');
-    const snap = await quizzes.where('creatorID', '==', id).get();
+    const snap = await quizzes.where('creatorId', '==', id).get();
     if (snap.empty) {
         console.log('This user has no quizzes!');
-        return;
+        return null;
     }
     let arr = [];
     snap.forEach(doc => {
@@ -60,11 +60,13 @@ const getQuizzesById = async (id) => {
 }
 
 // getQuiz('Basic Facts');
-// getQuizzesById("1").then(arr => {
-//     for (doc of arr) {
-//         console.log(doc);
-//     }
-// });
+getQuizzesByCreatorId("yGtGnQurwANstOO2rKMSsLF9roG2").then(arr => {
+    if (arr) {
+        for (doc of arr) {
+            console.log(doc);
+        }
+    }
+});
 
 // .then((docs) => {
 //     docs.forEach(doc => {
@@ -243,7 +245,13 @@ io.on('connection', (socket) => {
             console.log(data);
         });
     });
-
+    socket.on('getQuizNamesById', async (id) => {
+        const quizzes = await getQuizzesByCreatorId(id);
+        const ans = quizzes.map((x) => {
+            return { name: x.name, code: x.roomCode };
+        });
+        socket.emit('getQuizNamesById', ans);
+    });
     socket.on('creatorSignUp', (data) => {
         console.log(data);
         // console.log(db);
@@ -269,42 +277,42 @@ io.on('connection', (socket) => {
             });
     })
 
-    socket.once('get_quizzes', (data) => {
-        getQuizzesById(data.creator).then(arr => {
-            // for (doc of arr) {
-            //     console.log(doc);
-            // }
-            console.log('You are trying to get your quizzes....')
-            socket.emit('get_quizzes', {'quiz_arr': arr})
-        });
-        
-        
-        });
+    // socket.once('get_quizzes', (data) => {
+    //     getQuizzesById(data.creator).then(arr => {
+    //         // for (doc of arr) {
+    //         //     console.log(doc);
+    //         // }
+    //         console.log('You are trying to get your quizzes....')
+    //         socket.emit('get_quizzes', { 'quiz_arr': arr })
+    //     });
+
+
+    // });
 
     socket.on('getUsername', (data) => {
         console.log('User id is ' + data.creator)
         admin
-        .auth()
-        .getUser(data.creator)
-        .then((userRecord) => {
-            // See the UserRecord reference doc for the contents of userRecord.
-            console.log('Successfully fetched user data:' + userRecord);
-            socket.emit('getUsername', {user_obj: userRecord})
-        })
-        .catch((error) => {
-            console.log('Error fetching user data:', error);
-        });
+            .auth()
+            .getUser(data.creator)
+            .then((userRecord) => {
+                // See the UserRecord reference doc for the contents of userRecord.
+                console.log('Successfully fetched user data:' + userRecord);
+                socket.emit('getUsername', { user_obj: userRecord })
             })
+            .catch((error) => {
+                console.log('Error fetching user data:', error);
+            });
+    })
 
-    socket.on('submit_quiz', ({temp}) => {
+    socket.on('submit_quiz', ({ temp }) => {
         console.log(data);
         const quizzes = db.collection('quizzes');
         quizzes.add({
-            temp 
-          });
+            temp
+        });
 
-        
-        
+
+
 
     })
 

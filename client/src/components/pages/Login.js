@@ -56,10 +56,6 @@ function Login() {
                 console.log(error.message);
 
             })
-
-
-
-
     }
 
     // useEffect(() => {

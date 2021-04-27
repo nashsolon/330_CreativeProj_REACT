@@ -182,17 +182,17 @@ function HostGame() {
             setData(players);
         });
     }, [socket, setData]);
-    if (mode == 'play') {
+    if (mode === 'play') {
         return (
             <InGame data={qs}></InGame>
         );
     }
-    else if (mode == 'scores') {
+    else if (mode === 'scores') {
         return (
             <Scores data={data}></Scores>
         );
     }
-    else if (mode == 'wait') {
+    else if (mode === 'wait') {
         return (
             <Wait data={data} code={code} click={startGame}></Wait>
         );

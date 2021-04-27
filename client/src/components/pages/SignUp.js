@@ -40,7 +40,7 @@ function SignUp() {
     useEffect(() => {
         socket.on("creatorSignUp", function (data) {
             console.log(data);
-            if (data.signin == true) {
+            if (data.signin === true) {
                 setPage('creator_home') //Need to set the new page here because this is asynchronous!!!!! Was firing before this completed before
             }
             else {

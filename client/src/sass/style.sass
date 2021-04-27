@@ -3,6 +3,7 @@
 
 @use 'inputs'
 $tr-time: 300ms
+$bRadius: 10px
 
 html, body
     height: 100%
@@ -139,26 +140,34 @@ $signUpWidth: $codeInputWidth + 100px
 
 $loginInputWidth: 350px
 #login_form
+    margin: 0px
     margin-top: 100px
+    position: absolute
+    // top: 0px
+    left: 50%
+    // width: 100%
     text-align: center
     font-family: 'Quicksand'
     font-size: 30pt
 
     #pass
-        margin: 20px
+        margin-top: 20px
+        margin-bottom: 20px
 
     #user, #pass, #email
+        border-radius: $bRadius
         width: $loginInputWidth
 
     #sign_in
         height: 53px
         width: $loginInputWidth
+        border-radius: $bRadius
         background-color: blue
         color: white
-        text-align: center
+        // text-align: center
         font-weight: bold
-        left: 50%
-        margin: 0 auto
+        // left: 50%
+        // margin: 0 auto
         filter: brightness(1)
         transition: filter $tr-time
 
@@ -580,7 +589,7 @@ $bRadius: 10px
     right: 30px
 
     .icon
-        // position:
+        position: relative
         height: 60px
         width: 60px
         margin-left: 20px
@@ -593,10 +602,13 @@ $bRadius: 10px
             filter: brightness(0.8)
             cursor: pointer
 
-        p
-            position: relative
-            top: -5px
-            right: -1px
+        i
+            position: absolute
+            left: 50%
+            top: 50%
+            transform: translate(-50%, -50%)
+            color: #e7e7e7
+            // font-size: 60pt
 
     #s
         background-color: #388d5c
@@ -604,3 +616,15 @@ $bRadius: 10px
         background-color: #444c70
     #d
         background-color: #8b2737
+
+// .material-icons.md-18
+//     font-size: 18px
+// .material-icons.md-24
+//     font-size: 24px
+// .material-icons.md-36
+//     font-size: 36px
+// .material-icons.md-48
+//     font-size: 48px
+
+.material-icons
+    font-size: 32px
