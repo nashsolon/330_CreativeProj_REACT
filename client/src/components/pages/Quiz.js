@@ -25,7 +25,7 @@ function Question(props) {
 
 
     return (
-        
+
         <div className='question'>
             <p className='qTitle'>Question</p>
             <input type='text' value={quiz.questions[i].q} onChange={(e) => handleChange('q', e.target.value)}></input>
@@ -39,7 +39,7 @@ function Question(props) {
             <input type='text' value={quiz.questions[i].i3} onChange={(e) => handleChange('i3', e.target.value)}></input>
             <p id='delete' onClick={() => deleteQuestion(i)}>&#215;</p>
         </div>
-        
+
     );
 }
 
@@ -75,13 +75,13 @@ function QuizName() {
         let temp = JSON.parse(JSON.stringify(quiz));
         temp.name = change;
         setQuiz(temp);
-        
+
     };
-    
+
 
     return (
-        <div id = 'quiz_name'>
-            <p className = 'quiz_name'> Quiz Name </p>
+        <div className='question'>
+            <p className='qTitle'> Quiz Name </p>
             <input type='text' value={quiz.name} onChange={(e) => handleNameChange(e.target.value)}></input>
         </div>
     );
@@ -91,24 +91,24 @@ function SubmitQuiz() {
     const { socket } = useContext(GlobalContext);
     const { quiz, setQuiz } = useContext(QuizContext);
     const { creator } = useContext(CreatorContext);
-    
+
 
 
 
     function handleSubmitQuiz() {
-        let gen_code = Math.floor(Math.random()*10000)
+        let gen_code = Math.floor(Math.random() * 10000)
         console.log(gen_code)
 
         let temp = JSON.parse(JSON.stringify(quiz));
         temp.creatorId = creator;
         temp.roomCode = gen_code;
         setQuiz(temp);
-
+        console.log('submitted');
         socket.emit('submit_quiz', { temp })
 
     }
-    
-    
+
+
     console.log(quiz)
 
     useEffect(() => {
@@ -116,39 +116,42 @@ function SubmitQuiz() {
     })
     return (
 
-        <button onClick={handleSubmitQuiz}>Submit Quiz</button>
+        <div className='submitQuiz' onClick={handleSubmitQuiz}>
+            <p>Save Quiz</p>
+        </div>
     )
 }
 
-function Quiz() {
-    const [quiz, setQuiz] = useState({
-        name: 'This Quiz',
-        creatorId: 0,
-        roomCode: 0,
-        questions: [
-            {
-                i2: '9',
-                i3: '2',
-                q: 'How many days are in a week?',
-                i1: '4',
-                c: '7'
-            },
-            {
-                i2: '16',
-                i1: '9',
-                i3: '3',
-                c: '12',
-                q: 'How many months are in a year?'
-            },
-            {
-                i3: 'Mt. Nash',
-                c: 'Mt. Everest',
-                q: "What's the tallest mountain in the world?",
-                i2: 'Mt. Denali',
-                i1: 'K2'
-            }
-        ]
-    });
+function Quiz(props) {
+    // const [quiz, setQuiz] = useState({
+    //     name: 'This Quiz',
+    //     creatorId: 0,
+    //     roomCode: 0,
+    //     questions: [
+    //         {
+    //             i2: '9',
+    //             i3: '2',
+    //             q: 'How many days are in a week?',
+    //             i1: '4',
+    //             c: '7'
+    //         },
+    //         {
+    //             i2: '16',
+    //             i1: '9',
+    //             i3: '3',
+    //             c: '12',
+    //             q: 'How many months are in a year?'
+    //         },
+    //         {
+    //             i3: 'Mt. Nash',
+    //             c: 'Mt. Everest',
+    //             q: "What's the tallest mountain in the world?",
+    //             i2: 'Mt. Denali',
+    //             i1: 'K2'
+    //         }
+    //     ]
+    // });
+    const [quiz, setQuiz] = useState(props.quiz);
     let questions = quiz.questions;
     // console.log(`Question type is ${Array.isArray(questions)}`);
     const questionsComp = questions.map((q, index) => {
@@ -161,7 +164,7 @@ function Quiz() {
             <div className='questions'>
                 <QuizName></QuizName>
                 {quiz.questions[0] && questionsComp}
-                {!quiz.questions[0] && (<LooksEmpty></LooksEmpty>)}
+                {/* {!quiz.questions[0] && (<LooksEmpty></LooksEmpty>)} */}
                 <AddQuestion></AddQuestion>
                 <SubmitQuiz></SubmitQuiz>
                 <br></br>

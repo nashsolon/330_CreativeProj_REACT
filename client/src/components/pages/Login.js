@@ -26,11 +26,11 @@ function Login() {
     const { setCreator } = useContext(CreatorContext);
 
     function handleEmailChange(e) {
-        console.log("set email to " + e.target.value)
+        // console.log("set email to " + e.target.value)
         setEmail(e.target.value);
     }
     function handlePassChange(e) {
-        console.log("set pass to " + e.target.value)
+        // console.log("set pass to " + e.target.value)
         setPass(e.target.value);
     }
     function handleLogin(e) {

@@ -28,7 +28,7 @@ function Page() {
                 {page === "login" && (<Login></Login>)}
                 {page === "sign up" && (<SignUp></SignUp>)}
                 {page === "creator_home" && (<CreatorPage></CreatorPage>)}
-                {page === "create_game" && (<CreateGame></CreateGame>)}
+                {/* {page === "create_game" && (<CreateGame></CreateGame>)} */}
                 {page === "create a game" && (<Quiz></Quiz>)}
                 {page === "manage/start games" && (<StartGame></StartGame>)}
                 {page === "user_info" && (<UserInfo></UserInfo>)}
