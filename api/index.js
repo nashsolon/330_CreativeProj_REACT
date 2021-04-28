@@ -27,7 +27,7 @@ const getQuizByName = async (name) => {
 
 const getQuizByCode = async (code) => {
     const quizzes = db.collection('quizzes');
-    const snap = await quizzes.where('roomCode', '==', code).get();
+    const snap = await quizzes.where('temp.roomCode', '==', code).get();
     if (snap.empty) {
         console.log(`No quiz found with code ${code}`);
         return;
@@ -47,7 +47,7 @@ const getQuizByCode = async (code) => {
 
 const getQuizzesById = async (id) => {
     const quizzes = db.collection('quizzes');
-    const snap = await quizzes.where('creatorID', '==', id).get();
+    const snap = await quizzes.where('temp.creatorId', '==', id).get();
     if (snap.empty) {
         console.log('This user has no quizzes!');
         return;
@@ -270,16 +270,34 @@ io.on('connection', (socket) => {
     })
 
     socket.once('get_quizzes', (data) => {
+        quiz_arr = []
+        console.log(data.creator)
         getQuizzesById(data.creator).then(arr => {
-            // for (doc of arr) {
-            //     console.log(doc);
-            // }
-            console.log('You are trying to get your quizzes....')
-            socket.emit('get_quizzes', {'quiz_arr': arr})
+            if(arr != null){
+                for (doc of arr) {
+                    let name_code_obj = {name: doc.temp.name, code: doc.temp.roomCode}
+                    // console.log(name_code_obj)
+                    // console.log(doc);
+                    quiz_arr.push(name_code_obj)
+                }
+            }
+            
+            // console.log(quiz_arr)
+            socket.emit('get_quizzes', {quiz_arr: quiz_arr})
+            
         });
-        
-        
         });
+    
+    socket.once('get_one_quiz', (data) => {
+        console.log('Room code is ' + data.code)
+        getQuizByCode(data.code).then(arr => {
+           
+            socket.emit('get_one_quiz', {arr: arr})
+        })
+        
+    })
+
+        
 
     socket.on('getUsername', (data) => {
         console.log('User id is ' + data.creator)
@@ -294,7 +312,7 @@ io.on('connection', (socket) => {
         .catch((error) => {
             console.log('Error fetching user data:', error);
         });
-            })
+    })
 
     socket.on('submit_quiz', ({temp}) => {
         console.log(data);

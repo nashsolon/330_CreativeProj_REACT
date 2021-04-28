@@ -5,6 +5,7 @@ import CreatorContext from '../context/CreatorContext';
 // import { QuizBox, Box } from '../items';
 import UserContext from '../context/UserContext';
 import { useSpring, animated } from 'react-spring';
+import Quiz from './Quiz';
 
 
 const QuizzesContext = createContext();
@@ -40,9 +41,9 @@ function QuizBox(props) {
                 </div>
             )} */}
             <animated.div className='icons' style={enterRight} >
-                <Icon sym={'S'} i={i}></Icon>
-                <Icon sym={'E'} i={i}></Icon>
-                <Icon sym={'D'} i={i}></Icon>
+                <Icon sym={'S'} i={i} code = {props.code}></Icon>
+                <Icon sym={'E'} i={i} code = {props.code}></Icon>
+                <Icon sym={'D'} i={i} code = {''}></Icon>
             </animated.div>
         </div>
     );
@@ -50,16 +51,30 @@ function QuizBox(props) {
 
 function Icon(props) {
     const { quizzes, setQuizzes, setPopup, setPopIndex } = useContext(QuizzesContext);
+    const { socket, setPage } = useContext(GlobalContext);
+    
 
     const sym = props.sym;
     const i = props.i;
     const id = sym.toLowerCase();
-    const click = () => {
+
+    const clickIcon = () => {
+        
         if (sym === 'S') {
+            let code = props.code
+            // console.log('The quiz you want to start has a code of ' + code)
+            
+            socket.emit('get_one_quiz', {code: code});
 
         }
+    
         else if (sym === 'E') {
-
+            let code = props.code
+            socket.emit('get_one_quiz', {code: code});
+            
+            // console.log('The quiz you want to edit has a code of ' + props.code)
+           
+            
         }
         else if (sym === 'D') {
             let temp = JSON.parse(JSON.stringify(quizzes));
@@ -67,41 +82,44 @@ function Icon(props) {
             temp.splice(i, 1);
             setQuizzes(temp);
         }
-
     }
+
+    
     return (
-        <div id={id} onClick={click} className='icon'>
+        <div id={id} onClick={clickIcon} className='icon'>
             <p>{sym}</p>
         </div>
     )
 }
 
-// function Popup(props) {
-
-//     const { quizzes, setQuizzes, setPopup, popIndex, setPopIndex } = useContext(QuizzesContext);
-
-
-//     return (
-//         <div className='popup'>
-//             <p className='title'>{quizzes[popIndex].name}</p>
-//         </div>
-//     );
-// }
-
 function CreatorPage(props) {
     // const { page, setPage } = useContext(GlobalContext);
+    const { socket, setPage } = useContext(GlobalContext)
+    const { creator } = useContext(CreatorContext);
+    console.log(creator)
+    socket.emit('get_quizzes', { 'creator': creator })
 
     const [quizzes, setQuizzes] = useState([
-        { name: '330 Quiz 1', code: '0214' },
-        { name: '217 Quiz 2', code: '1623' },
-        { name: 'Basic Facts', code: '1234' }
+        // { name: '330 Quiz 1', code: '0214' },
+        // { name: '217 Quiz 2', code: '1623' },
+        // { name: 'Basic Facts', code: '1234' }
     ]);
+
+    useEffect(() => {
+        // let data = { 'creator': creator }
+        socket.once("get_quizzes", function (data) {
+            // console.log(data)
+
+            setQuizzes(data.quiz_arr);
+        });
+    }, [socket, setPage]);
 
     const [popup, setPopup] = useState(false);
     const [popIndex, setPopIndex] = useState(-1);
 
     const allQuizzes = quizzes.map((quiz, index) => {
-        return <QuizBox key={index} index={index}></QuizBox>
+        console.log(quiz);
+        return <QuizBox key={index} index={index} code = {quiz.code}></QuizBox>
     });
 
     const cont = { quizzes, setQuizzes, popup, setPopup, popIndex, setPopIndex }

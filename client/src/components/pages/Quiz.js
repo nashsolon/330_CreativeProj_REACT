@@ -123,35 +123,35 @@ function SubmitQuiz() {
 }
 
 function Quiz(props) {
-    // const [quiz, setQuiz] = useState({
-    //     name: 'This Quiz',
-    //     creatorId: 0,
-    //     roomCode: 0,
-    //     questions: [
-    //         {
-    //             i2: '9',
-    //             i3: '2',
-    //             q: 'How many days are in a week?',
-    //             i1: '4',
-    //             c: '7'
-    //         },
-    //         {
-    //             i2: '16',
-    //             i1: '9',
-    //             i3: '3',
-    //             c: '12',
-    //             q: 'How many months are in a year?'
-    //         },
-    //         {
-    //             i3: 'Mt. Nash',
-    //             c: 'Mt. Everest',
-    //             q: "What's the tallest mountain in the world?",
-    //             i2: 'Mt. Denali',
-    //             i1: 'K2'
-    //         }
-    //     ]
-    // });
-    const [quiz, setQuiz] = useState(props.quiz);
+    const [quiz, setQuiz] = useState({
+        name: 'This Quiz',
+        creatorId: 0,
+        roomCode: 0,
+        questions: [
+            {
+                i2: '9',
+                i3: '2',
+                q: 'How many days are in a week?',
+                i1: '4',
+                c: '7'
+            },
+            {
+                i2: '16',
+                i1: '9',
+                i3: '3',
+                c: '12',
+                q: 'How many months are in a year?'
+            },
+            {
+                i3: 'Mt. Nash',
+                c: 'Mt. Everest',
+                q: "What's the tallest mountain in the world?",
+                i2: 'Mt. Denali',
+                i1: 'K2'
+            }
+        ]
+    });
+    // const [quiz, setQuiz] = useState(props.quiz);
     let questions = quiz.questions;
     // console.log(`Question type is ${Array.isArray(questions)}`);
     const questionsComp = questions.map((q, index) => {
