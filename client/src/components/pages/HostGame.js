@@ -1,6 +1,7 @@
 
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import GlobalContext from '../GlobalContext';
+import CreatorContext from '../context/CreatorContext';
 
 function HostGameHeader(props) {
     return (
@@ -146,12 +147,13 @@ function Wait(props) {
 
 function HostGame() {
     const { socket } = useContext(GlobalContext);
-
+    const { editCode } = useContext(CreatorContext);
     const [qs, setQs] = useState();
-    const code = '1234';
+    // const code = '1234';
 
-
-    socket.emit('hostGame', code);
+    useEffect(() => {
+        socket.emit('hostGame', editCode);
+    }, [socket]);
 
     const [data, setData] = useState();
     //     { name: "Nick", score: 120 },
@@ -167,7 +169,7 @@ function HostGame() {
     // console.log(data)
     const [mode, setMode] = useState('wait');
     const startGame = () => {
-        socket.emit('startGame', { code: code });
+        socket.emit('startGame', { code: editCode });
         // setMode('play');
     };
     useState(() => {
@@ -194,7 +196,7 @@ function HostGame() {
     }
     else if (mode === 'wait') {
         return (
-            <Wait data={data} code={code} click={startGame}></Wait>
+            <Wait data={data} code={editCode} click={startGame}></Wait>
         );
     }
 }
