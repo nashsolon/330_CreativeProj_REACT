@@ -52,16 +52,13 @@ function SignUp() {
 
     return (
         <div>
-            <BackButton page='create'> </BackButton>
+
             <form id='signup_form'>
                 <input id="email" onChange={n => handleEmail(n)} placeholder="E-mail" type="text"></input>
-                <br></br>
-                {/* <input id="user" placeholder="Username" onChange={n => handleUser(n)} type="text"></input>
-                <br></br> */}
                 <input id="pass" placeholder="Password" onChange={n => handlePass(n)} type="text"></input>
-                <br></br>
                 <input id="sign_up" type="submit" value="Sign Up" onClick={n => handleSignUp(n)}></input>
             </form>
+            <BackButton page='create'></BackButton>
         </div>
     )
 }

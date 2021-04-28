@@ -3,9 +3,10 @@ import { Box, BackButton } from '../items';
 function CreateScreen() {
     return (
         <div>
-            <h1>Create</h1>
-            <Box name="Login" just="right"></Box>
-            <Box name="Sign Up" just="left"></Box>
+            <div className='boxes'>
+                <Box name="Login" just="right"></Box>
+                <Box name="Sign Up" just="left"></Box>
+            </div>
             <BackButton page="start"></BackButton>
         </div>
     )

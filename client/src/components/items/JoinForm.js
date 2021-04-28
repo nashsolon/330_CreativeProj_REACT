@@ -1,6 +1,7 @@
 import GlobalContext from '../GlobalContext';
 import React, { useState, useContext, useEffect } from 'react';
 import UserContext from '../context/UserContext';
+import { useSpring, animated } from 'react-spring'
 
 function JoinForm() {
 
@@ -9,6 +10,9 @@ function JoinForm() {
     // const [tempCode, setTempCode] = useState('');
     const { setPage, socket } = useContext(GlobalContext);
     const { setRoomcode } = useContext(UserContext);
+
+    const fade = useSpring({ opacity: failure ? '1' : '0' });
+    const fadeTime = 2000;
 
     function handleChange(e) {
         setValue(e.target.value);
@@ -30,6 +34,7 @@ function JoinForm() {
             else {
                 console.log("Join room unsuccessful");
                 setFailure(true);
+                setTimeout(() => setFailure(false), fadeTime);
             }
         });
     }, [socket, setRoomcode, setPage]);
@@ -39,7 +44,7 @@ function JoinForm() {
             <br></br>
             <input id="joinRoom" type="submit" value="Join"></input>
             <br></br>
-            {failure && <p className="formFailure">Invalid Room</p>}
+            <animated.p className="formFailure" style={fade}>Invalid Room</animated.p>
         </form>
     );
 }

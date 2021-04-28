@@ -4,6 +4,9 @@
 @use 'inputs'
 $tr-time: 300ms
 $bRadius: 10px
+$shadow: 7px 7px 10px rgba(44, 44, 44, 0.315)
+$borderBottom: 3px solid #e7e7e7
+$joinColor: #9188e0
 
 html, body
     height: 100%
@@ -12,7 +15,7 @@ html, body
     // min-height: 100%
 
 body
-    background-color: lightgrey
+    background-color: rgb(50, 79, 143)
     font-family: 'Quicksand'
     color: black
     // overflow: hidden
@@ -44,36 +47,57 @@ body
         &.on_true
             background-color: #70be6d
 
-.box
+.boxes
     position: absolute
-    margin: 0
-    width: 50%
+    width: 100%
     height: 100%
-    font-weight: bold
-    font-size: 30pt
-    text-align: center
-    filter: brightness(1)
-    transition: filter $tr-time
+    // top: 50%
+    // tranform: translate(0, -50%)
+    flex-direction: column
+    display: flex
+    align-items: center
+    justify-content: center
 
-    &.left
-        background-color: lightblue
-        left: 0
-        top: 0
-
-    &.right
-        background-color: rgb(170, 240, 170)
-        right: 0
-        top: 0
-
-    p
+    .box
         position: relative
-        margin: 0
-        top: 50%
-        transform: translate(0, -50%)
+        color: #222
+        // margin-top: 30px
+        // margin-bottom: 30px
+        margin: 50px
+        width: 60%
+        // height: 100%
+        box-shadow: $shadow
+        border-radius: $bRadius
+        height: 100px
+        font-weight: bold
+        font-size: 30pt
+        text-align: center
+        filter: brightness(1)
+        transition: filter $tr-time
+        // left: 50%
+        // transform: translate(-50%, 0)
 
-    &:hover
-        filter: brightness(0.8)
-        cursor: pointer
+        &.left
+
+            background-color: lightblue
+            // left: 0
+            // top: 0
+
+        &.right
+            background-color: rgb(170, 240, 170)
+            // margin-top: 0px
+            // right: 0
+            // top: 0
+
+        p
+            position: relative
+            margin: 0
+            top: 50%
+            transform: translate(0, -50%)
+
+        &:hover
+            filter: brightness(0.8)
+            cursor: pointer
 
 #game_creator
     position: absolute
@@ -82,7 +106,10 @@ body
     margin-top: 100px
 
 $codeInputWidth: 210px
-.enterCode, .enterName, .loginForm
+.enterCode, .enterName
+    position: absolute
+    width: 100%
+    height: 100%
     margin-top: 100px
     text-align: center
     font-family: 'Quicksand'
@@ -90,15 +117,19 @@ $codeInputWidth: 210px
 
     #text
         font-weight: bold
+        color: white
 
     #code
         margin: 20px
         width: $codeInputWidth
+        background-color: #FFFFFF00
+        border-bottom: $borderBottom
+        color: white
 
     #joinRoom
         height: 53px
         width: $codeInputWidth
-        background-color: blue
+        background-color: $joinColor
         color: white
         text-align: center
         font-weight: bold
@@ -106,33 +137,47 @@ $codeInputWidth: 210px
         margin: 0 auto
         filter: brightness(1)
         transition: filter $tr-time
+        border-radius: $bRadius
+        box-shadow: $shadow
 
         &:hover
             filter: brightness(0.8)
             cursor: pointer
 $signUpWidth: $codeInputWidth + 100px
 #signup_form
-    margin-top: 100px
+    position: absolute
+    display: flex
+    width: 100%
+    height: 100%
+    flex-direction: column
+    align-items: center
+    justify-content: center
+
+    // margin-top: 100px
     text-align: center
     font-family: 'Quicksand'
     font-size: 30pt
 
     #user, #email, #pass
-        border-radius: $bRadius
-        margin: 15px
+        // border-radius: $bRadius
+        background-color: #00000000
+        color: white
+        margin: 20px
         width: $signUpWidth
+        border-bottom: $borderBottom
 
     #sign_up
         border-radius: $bRadius
+        box-shadow: $shadow
         height: 53px
         width: $signUpWidth
-        background-color: blue
+        background-color: $joinColor
         color: white
         text-align: center
         font-weight: bold
         left: 50%
-        margin: 0 auto
-        margin-top: 10px
+        // margin: 0 auto
+        margin: 20px
         filter: brightness(1)
         transition: filter $tr-time
 
@@ -141,49 +186,54 @@ $signUpWidth: $codeInputWidth + 100px
             cursor: pointer
 
 $loginInputWidth: 350px
-#login_form
-    margin: 0px
-    margin-top: 100px
+.loginForm
     position: absolute
-    // top: 0px
-    left: 50%
-    // width: 100%
-    text-align: center
-    font-family: 'Quicksand'
-    font-size: 30pt
+    height: 100%
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
 
-    #pass
-        margin-top: 20px
-        margin-bottom: 20px
+    #login_form
+        margin: 0px
+        left: 50%
+        font-family: 'Quicksand'
+        font-size: 30pt
 
-    #user, #pass, #email
-        border-radius: $bRadius
-        width: $loginInputWidth
+        #user, #pass, #email
+            // border-radius: $bRadius
+            border-bottom: $borderBottom
+            background-color: #00000000
+            color: white
+            width: $loginInputWidth
+            margin: 20px
 
-    #sign_in
-        height: 53px
-        width: $loginInputWidth
-        border-radius: $bRadius
-        background-color: blue
-        color: white
-        // text-align: center
-        font-weight: bold
-        // left: 50%
-        // margin: 0 auto
-        filter: brightness(1)
-        transition: filter $tr-time
+        #sign_in
+            height: 53px
+            margin: 20px
+            width: $loginInputWidth
+            border-radius: $bRadius
+            background-color: $joinColor
+            box-shadow: $shadow
+            color: white
+            // text-align: center
+            font-weight: bold
+            // left: 50%
+            // margin: 0 auto
+            filter: brightness(1)
+            transition: filter $tr-time
 
-        &:hover
-            filter: brightness(0.8)
-            cursor: pointer
+            &:hover
+                filter: brightness(0.8)
+                cursor: pointer
 
 .enterName
     #text
         font-size: 28pt
 
 #backButton
-    color: #0c74f3
-    position: absolute
+    color: #a9cefc
+    position: fixed
     top: 0px
     left: 55px
     filter: brightness(1)
@@ -193,6 +243,9 @@ $loginInputWidth: 350px
     -webkit-transform: scale(-1, 1)
     -o-transform: scale(-1, 1)
     -ms-transform: scale(-1, 1)
+
+    // text-shadow: $shadow
+
     transition: filter $tr-time
     font-size: 30pt
 
@@ -347,7 +400,9 @@ $gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
             background-color: nth($gameButtonColors, 5)
 
 .formFailure
+    margin-top: 15px
     font-size: 26pt
+    color: #ff7979
 
 .waiting
     text-align: center
@@ -355,7 +410,7 @@ $gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
         position: relative
         font-size: 26pt
         text-align: center
-        color: rgb(62, 109, 124)
+        color: rgb(176, 217, 231)
 
 .playerRanks
     margin: 0
@@ -394,8 +449,6 @@ $gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
             margin-right: 30px
             position: absolute
             right: 0
-
-$shadow: 7px 7px 10px rgba(44, 44, 44, 0.315)
 
 .playerBoxes
     margin: 0
@@ -455,6 +508,8 @@ $bRadius: 10px
     // text-align:
     // position: absolute
     // justify-content: center
+    height: 100%
+    // overflow-y: scroll
     // align-items: center
     width: 100%
 
@@ -595,7 +650,7 @@ $bRadius: 10px
     transform: translate(-50%, 0)
     margin-top: 50px
     // margin-left: 20px
-    background-color: green
+    background-color: $buttonGreen
     border-radius: 50%
     box-shadow: $shadow
     display: inline-block
@@ -653,15 +708,6 @@ $bRadius: 10px
         background-color: #444c70
     #d
         background-color: #8b2737
-
-// .material-icons.md-18
-//     font-size: 18px
-// .material-icons.md-24
-//     font-size: 24px
-// .material-icons.md-36
-//     font-size: 36px
-// .material-icons.md-48
-//     font-size: 48px
 
 .material-icons
     font-size: 32px

@@ -1,12 +1,17 @@
 import GlobalContext from '../GlobalContext';
 import { React, useContext, useEffect, useState } from 'react';
 import UserContext from '../context/UserContext';
+import { useSpring, animated } from 'react-spring'
+
 
 function NameForm() {
     const [value, setValue] = useState('');
     const [failure, setFailure] = useState(false);
     const { setPage, socket } = useContext(GlobalContext);
     const { setUsername, roomcode } = useContext(UserContext);
+
+    const fade = useSpring({ opacity: failure ? '1' : '0' });
+    const fadeTime = 2000;
 
     function handleChange(e) {
         setValue(e.target.value);
@@ -27,6 +32,7 @@ function NameForm() {
                 const rsn = data.reason;
                 console.log("Failed: " + rsn);
                 setFailure(true);
+                setTimeout(() => setFailure(false), fadeTime);
             }
         });
     }, [socket, setUsername, setPage]);
@@ -37,7 +43,7 @@ function NameForm() {
             <br></br>
             <input id="joinRoom" type="submit" value="Join"></input>
             <br></br>
-            {failure && <p className="formFailure">Invalid Name</p>}
+            <animated.p className="formFailure" style={fade}>Invalid Name</animated.p>
         </form>
     )
 }

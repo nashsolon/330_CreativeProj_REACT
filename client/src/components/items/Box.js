@@ -8,8 +8,11 @@ function Box(props) {
 
     const name = props.name;
     const classname = 'box ' + props.just;
-    let thisBox = <div onClick={() => setPage(name.toLowerCase())} className={classname}><p>{name}</p></div>;
-    return thisBox;
+    return (
+        <div onClick={() => setPage(name.toLowerCase())} className={classname}>
+            <p>{name}</p>
+        </div>
+    );
 }
 
 export default Box;
