@@ -66,7 +66,9 @@ function Icon(props) {
         const name = quizzes[i].name;
         const code = quizzes[i].code;
         if (sym === 'S') {
+            await setEditCode(code);
             console.log(`Start quiz ${name}`);
+            setPage('hostgame')
         }
     
         else if (sym === 'E') {
