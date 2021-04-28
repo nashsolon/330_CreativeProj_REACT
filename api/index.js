@@ -3,11 +3,13 @@ const http = require('http').createServer(app);
 const socketio = require('socket.io');
 let admin = require("firebase-admin");
 
-let serviceAccount = require("./serviceAccountKey.json");
+// let serviceAccount = require("./serviceAccountKey.json");
+let serviceAccount = require("./sasha-firebase.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://quiz.firebaseio.com'
+    // databaseURL: 'https://quiz.firebaseio.com'
+    databaseURL: 'https://quiz-game.firebaseio.com'
 });
 // let app = admin.initializeApp();
 
@@ -26,43 +28,61 @@ const getQuizByName = async (name) => {
 };
 
 const getQuizByCode = async (code) => {
-    const quizzes = db.collection('quizzes');
-    const snap = await quizzes.where('temp.roomCode', '==', code).get();
-    if (snap.empty) {
+    const quizzes = db.collection('quizzes').doc(code);
+    const doc = await quizzes.get();
+    if (!doc.exists) {
         console.log(`No quiz found with code ${code}`);
         return;
     }
-    let quiz;
-    snap.forEach(doc => {
-        quiz = doc.data();
-    });
-    return quiz;
+    return doc.data();
     // console.log(snap[0].data());
     // return snap[0];
 };
 
-// getQuizByCode("1234").then(doc => {
+// getQuizByCode("6891").then(doc => {
 //     console.log(doc);
 // });
 
-const getQuizzesById = async (id) => {
+const getQuizzesByCreatorId = async (id) => {
     const quizzes = db.collection('quizzes');
-    const snap = await quizzes.where('temp.creatorId', '==', id).get();
+    const snap = await quizzes.where('creatorId', '==', id).get();
     if (snap.empty) {
         console.log('This user has no quizzes!');
-        return;
+        return null;
     }
     let arr = [];
     snap.forEach(doc => {
-        arr.push(doc.data());
+        let thing = doc.data();
+        thing.roomCode = doc.id;
+        arr.push(thing);
     });
     return arr;
 }
 
+const getRoomCodes = async () => {
+    const quizzes = db.collection('quizzes').doc('rooms');
+    const doc = await quizzes.get();
+    if (!doc.exists) {
+        console.log("failed");
+        return null;
+    }
+    else {
+        return doc.data().codes;
+    }
+}
+
 // getQuiz('Basic Facts');
-// getQuizzesById("1").then(arr => {
-//     for (doc of arr) {
-//         console.log(doc);
+// getQuizzesByCreatorId("i4pArCZaNKcnmUTK4nM2IA0muJ02").then(arr => {
+//     if (arr) {
+//         for (doc of arr) {
+//             console.log(doc);
+//         }
+//     }
+// });
+
+// getRoomCodes().then(arr => {
+//     if (arr) {
+//         console.log(arr);
 //     }
 // });
 
@@ -243,7 +263,21 @@ io.on('connection', (socket) => {
             console.log(data);
         });
     });
-
+    socket.on('getQuizNamesById', async (id) => {
+        console.log('get all quizes from this user');
+        const quizzes = await getQuizzesByCreatorId(id);
+        console.log('User quizzes is ' + quizzes)
+        let ans;
+        if(quizzes != null){
+            ans = quizzes.map((x) => {
+                return { name: x.name, code: x.roomCode };
+            });
+        }
+        else{
+            ans = [];
+        }
+        socket.emit('getQuizNamesById', ans);
+    });
     socket.on('creatorSignUp', (data) => {
         console.log(data);
         // console.log(db);
@@ -254,7 +288,7 @@ io.on('connection', (socket) => {
                 emailVerified: false,
 
                 password: data.signin_pass,
-                displayName: data.signin_user
+                // displayName: data.signin_user
             })
             .then((userRecord) => {
                 // See the UserRecord reference doc for the contents of userRecord.
@@ -269,62 +303,65 @@ io.on('connection', (socket) => {
             });
     })
 
-    socket.once('get_quizzes', (data) => {
-        quiz_arr = []
-        console.log(data.creator)
-        getQuizzesById(data.creator).then(arr => {
-            if(arr != null){
-                for (doc of arr) {
-                    let name_code_obj = {name: doc.temp.name, code: doc.temp.roomCode}
-                    // console.log(name_code_obj)
-                    // console.log(doc);
-                    quiz_arr.push(name_code_obj)
-                }
-            }
-            
-            // console.log(quiz_arr)
-            socket.emit('get_quizzes', {quiz_arr: quiz_arr})
-            
-        });
-        });
-    
-    socket.once('get_one_quiz', (data) => {
-        console.log('Room code is ' + data.code)
-        getQuizByCode(data.code).then(arr => {
-           
-            socket.emit('get_one_quiz', {arr: arr})
-        })
-        
-    })
+    // socket.once('get_quizzes', (data) => {
+    //     getQuizzesById(data.creator).then(arr => {
+    //         // for (doc of arr) {
+    //         //     console.log(doc);
+    //         // }
+    //         console.log('You are trying to get your quizzes....')
+    //         socket.emit('get_quizzes', { 'quiz_arr': arr })
+    //     });
 
-        
+
+    // });
+
+    socket.on('get_one_quiz', async (code) => {
+        console.log('Get quiz at room ' + code);
+        const quiz = await getQuizByCode(code);
+        socket.emit('get_one_quiz', quiz);
+    });
 
     socket.on('getUsername', (data) => {
         console.log('User id is ' + data.creator)
         admin
-        .auth()
-        .getUser(data.creator)
-        .then((userRecord) => {
-            // See the UserRecord reference doc for the contents of userRecord.
-            console.log('Successfully fetched user data:' + userRecord);
-            socket.emit('getUsername', {user_obj: userRecord})
-        })
-        .catch((error) => {
-            console.log('Error fetching user data:', error);
-        });
+            .auth()
+            .getUser(data.creator)
+            .then((userRecord) => {
+                // See the UserRecord reference doc for the contents of userRecord.
+                console.log('Successfully fetched user data:' + userRecord);
+                socket.emit('getUsername', { user_obj: userRecord })
+            })
+            .catch((error) => {
+                console.log('Error fetching user data:', error);
+            });
     })
 
-    socket.on('submit_quiz', ({temp}) => {
-        console.log(data);
-        const quizzes = db.collection('quizzes');
-        quizzes.add({
-            temp 
-          });
+    socket.on('createQuiz', async (id) => {
+        console.log("let's create a quiz!");
+        let codes = await getRoomCodes();
+        let gen_code = Math.floor(Math.random() * 10000);
+        while (codes.includes(gen_code)) {
+            gen_code = Math.floor(Math.random() * 10000);
+        }
+        const rooms = db.collection('quizzes').doc('rooms');
+        await rooms.update({ codes: admin.firestore.FieldValue.arrayUnion(gen_code.toString()) });
 
-        
-        
+        const temp = { creatorId: id, name: 'Untitled', questions: [] };
+        await db.collection('quizzes').doc(gen_code.toString()).set(temp);
 
+        socket.emit('quizCreated', gen_code.toString());
+    });
+
+    socket.on('submit_quiz', async ({ quiz, code }) => {
+        const res = await db.collection('quizzes').doc(code).delete();
+        await db.collection('quizzes').doc(code).set(quiz);
+        socket.emit('quizSaved');
     })
+
+    socket.on('deleteQuiz', async (code) => {
+        const res = await db.collection('quizzes').doc(code).delete();
+        console.log(`Quiz ${code} succesfully deleted`);
+    });
 
 
 

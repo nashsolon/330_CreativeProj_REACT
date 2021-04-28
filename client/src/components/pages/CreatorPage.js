@@ -25,6 +25,7 @@ function QuizBox(props) {
     const [iconsVis, setIconsVis] = useState(false);
     // onMouseOver={setIconsVis(true)} onMouseLeave={setIconsVis(false)}
 
+    // iconVis, NOT 'true'
     const enterRight = useSpring({ transform: iconsVis ? 'translate3d(0px,0px,0px)' : 'translate3d(300px,0px,0px)' });
     // style={enterRight}
 
@@ -50,35 +51,35 @@ function QuizBox(props) {
 }
 
 function Icon(props) {
-    const { quizzes, setQuizzes, setPopup, setPopIndex } = useContext(QuizzesContext);
-    const { socket, setPage } = useContext(GlobalContext);
-    
+    const { quizzes, setQuizzes } = useContext(QuizzesContext);
+    const { setEditCode } = useContext(CreatorContext);
+    const { setPage, socket } = useContext(GlobalContext);
 
     const sym = props.sym;
     const i = props.i;
     const id = sym.toLowerCase();
 
-    const clickIcon = () => {
-        
-        if (sym === 'S') {
-            let code = props.code
-            // console.log('The quiz you want to start has a code of ' + code)
-            
-            socket.emit('get_one_quiz', {code: code});
+    let icon = sym === 'S' ? 'play_arrow' : 'edit';
+    icon = sym === 'D' ? 'delete' : icon;
 
+    const click = async () => {
+        const name = quizzes[i].name;
+        const code = quizzes[i].code;
+        if (sym === 'S') {
+            console.log(`Start quiz ${name}`);
         }
     
         else if (sym === 'E') {
-            let code = props.code
-            socket.emit('get_one_quiz', {code: code});
-            
-            // console.log('The quiz you want to edit has a code of ' + props.code)
-           
-            
+            console.log(`Edit quiz ${name}`)
+            await setEditCode(code);
+            console.log('set edit code to ' + code);
+
+            setPage('quiz');
         }
         else if (sym === 'D') {
             let temp = JSON.parse(JSON.stringify(quizzes));
-            // console.log(`We want to delete ${i}`);
+            socket.emit('deleteQuiz', code);
+            console.log(`Delete quiz ${name}`);
             temp.splice(i, 1);
             setQuizzes(temp);
         }
@@ -86,51 +87,90 @@ function Icon(props) {
 
     
     return (
-        <div id={id} onClick={clickIcon} className='icon'>
-            <p>{sym}</p>
+        <div id={id} onClick={click} className='icon'>
+            <i className="material-icons">{icon}</i>
         </div>
     )
 }
 
-function CreatorPage(props) {
-    // const { page, setPage } = useContext(GlobalContext);
-    const { socket, setPage } = useContext(GlobalContext)
+const AddQuiz = () => {
+    const { socket, page, setPage } = useContext(GlobalContext);
+    const { quizzes, setQuizzes, setPopup, setPopIndex } = useContext(QuizzesContext);
     const { creator } = useContext(CreatorContext);
-    console.log(creator)
-    socket.emit('get_quizzes', { 'creator': creator })
+    const add = () => {
+        let temp = JSON.parse(JSON.stringify(quizzes));
+        console.log(`Create new quiz`);
+        socket.emit('createQuiz', creator);
+    };
+    return (
+        <div className='icon' onClick={add}>
+            <i className="material-icons">add</i>
+        </div>
+    )
+};
 
-    const [quizzes, setQuizzes] = useState([
-        // { name: '330 Quiz 1', code: '0214' },
-        // { name: '217 Quiz 2', code: '1623' },
-        // { name: 'Basic Facts', code: '1234' }
-    ]);
+function CreatorPage(props) {
+    const { socket, page, setPage } = useContext(GlobalContext);
+    const { creator, setEditCode } = useContext(CreatorContext);
+
+    // const [quizzes, setQuizzes] = useState([
+    //     { name: '330 Quiz 1', code: '0214' },
+    //     { name: '217 Quiz 2', code: '1623' },
+    //     { name: 'Basic Facts', code: '1234' }
+    // ]);
+    const [quizzes, setQuizzes] = useState();
+
+    // if (!quizzes || (quizzes && !quizzes[0].hasOwnProperty('name'))) {
+    useEffect(() => {
+        // console.log("hmm");
+        socket.emit('getQuizNamesById', creator);
+        // setQuizzes([{}]
+    }, []);
 
     useEffect(() => {
-        // let data = { 'creator': creator }
-        socket.once("get_quizzes", function (data) {
-            // console.log(data)
-
-            setQuizzes(data.quiz_arr);
+        socket.on('quizCreated', async (code) => {
+            await setEditCode(code);
+            console.log('set edit code to ' + code);
+            setPage('quiz');
         });
-    }, [socket, setPage]);
+    }, [socket, setEditCode]);
 
-    const [popup, setPopup] = useState(false);
-    const [popIndex, setPopIndex] = useState(-1);
+    // else {
+    //     console.log(quizzes[0].name);
+    // }
 
-    const allQuizzes = quizzes.map((quiz, index) => {
-        console.log(quiz);
-        return <QuizBox key={index} index={index} code = {quiz.code}></QuizBox>
+    useEffect(() => {
+        socket.on('getQuizNamesById', async (data) => {
+            setQuizzes(data);
+            console.log('got it at least');
+            console.log(data);
+        });
+    }, [socket, setQuizzes]);
+
+    let quizMap;
+    if (quizzes) {
+        quizMap = quizzes;
+    }
+    else {
+        quizMap = [{}];
+    }
+    let allQuizzes = quizMap.map((quiz, index) => {
+        return <QuizBox key={index} index={index}></QuizBox>
     });
 
-    const cont = { quizzes, setQuizzes, popup, setPopup, popIndex, setPopIndex }
+
+    const cont = { quizzes, setQuizzes }
 
     return (
         <QuizzesContext.Provider value={cont}>
             <div className='questions'>
                 {/* <Box just='left' name='Create a Game'></Box>
                 <Box just='right' name='Manage/Start Games'></Box> */}
-                {allQuizzes}
+                {quizzes && allQuizzes}
                 {/* {popup && <Popup></Popup>} */}
+                <AddQuiz></AddQuiz>
+                <br></br>
+                <br></br>
             </div>
         </QuizzesContext.Provider>
     );

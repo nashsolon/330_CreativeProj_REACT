@@ -10,9 +10,10 @@ function Page() {
     // const { user_obj, setUserObj } = React.useContext(UserObjContext);
     const [username, setUsername] = useState('');
     const [roomcode, setRoomcode] = useState('');
-    const [creator, setCreator] = useState('')
+    const [creator, setCreator] = useState('');
+    const [editCode, setEditCode] = useState('');
     const userContInfo = { username, roomcode, setUsername, setRoomcode }
-    const creatorContInfo = { creator, setCreator }
+    const creatorContInfo = { creator, setCreator, editCode, setEditCode }
 
     return (
         <div>
@@ -29,7 +30,7 @@ function Page() {
                 {page === "sign up" && (<SignUp></SignUp>)}
                 {page === "creator_home" && (<CreatorPage></CreatorPage>)}
                 {/* {page === "create_game" && (<CreateGame></CreateGame>)} */}
-                {page === "create a game" && (<Quiz></Quiz>)}
+                {page === "quiz" && (<Quiz></Quiz>)}
                 {page === "manage/start games" && (<StartGame></StartGame>)}
                 {page === "user_info" && (<UserInfo></UserInfo>)}
                 {page === "saved_games" && (<SavedGames></SavedGames>)}
