@@ -292,7 +292,7 @@ io.on('connection', (socket) => {
             })
             .then((userRecord) => {
                 // See the UserRecord reference doc for the contents of userRecord.
-                let data = { 'signin': true }
+                let data = { 'signin': true, creatorId:  userRecord.uid}
                 socket.emit('creatorSignUp', data)
                 console.log('Successfully created new user:', userRecord.uid);
             })

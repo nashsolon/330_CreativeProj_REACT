@@ -10,6 +10,7 @@ function SignUp() {
     const [signin_email, setEmail] = useState("");
     const [signin_pass, setPass] = useState("");
     const { setPage, socket } = useContext(GlobalContext);
+    const { creator, setCreator } = useContext(CreatorContext)
     // const { creator, setCreator } = useContext(CreatorContext);
 
 
@@ -32,6 +33,7 @@ function SignUp() {
         // console.log(signin_pass)
         // console.log(firebase)
         let signup_object = { signin_email: signin_email, signin_pass: signin_pass }
+
         e.preventDefault();
         socket.emit('creatorSignUp', signup_object)
         // setPage('creator_home')
@@ -42,6 +44,7 @@ function SignUp() {
         socket.on("creatorSignUp", function (data) {
             console.log(data);
             if (data.signin === true) {
+                setCreator(data.creatorId)
                 setPage('creator_home') //Need to set the new page here because this is asynchronous!!!!! Was firing before this completed before
             }
             else {
