@@ -267,14 +267,14 @@ io.on('connection', (socket) => {
         console.log('get all quizes from this user');
         const quizzes = await getQuizzesByCreatorId(id);
         console.log('User quizzes is ' + quizzes)
-        let ans;
+        let ans; //needed to declare ans out here
         if(quizzes != null){
             ans = quizzes.map((x) => {
                 return { name: x.name, code: x.roomCode };
             });
         }
         else{
-            ans = [];
+            ans = []; //Fixed sign up here
         }
         socket.emit('getQuizNamesById', ans);
     });
