@@ -3,11 +3,13 @@ const http = require('http').createServer(app);
 const socketio = require('socket.io');
 let admin = require("firebase-admin");
 
-let serviceAccount = require("./serviceAccountKey.json");
+// let serviceAccount = require("./serviceAccountKey.json");
+let serviceAccount = require("./sasha-firebase.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://quiz.firebaseio.com'
+    // databaseURL: 'https://quiz.firebaseio.com'
+    databaseURL: 'https://quiz-game.firebaseio.com'
 });
 // let app = admin.initializeApp();
 
@@ -26,22 +28,18 @@ const getQuizByName = async (name) => {
 };
 
 const getQuizByCode = async (code) => {
-    const quizzes = db.collection('quizzes');
-    const snap = await quizzes.where('roomCode', '==', code).get();
-    if (snap.empty) {
+    const quizzes = db.collection('quizzes').doc(code);
+    const doc = await quizzes.get();
+    if (!doc.exists) {
         console.log(`No quiz found with code ${code}`);
         return;
     }
-    let quiz;
-    snap.forEach(doc => {
-        quiz = doc.data();
-    });
-    return quiz;
+    return doc.data();
     // console.log(snap[0].data());
     // return snap[0];
 };
 
-// getQuizByCode("1234").then(doc => {
+// getQuizByCode("6891").then(doc => {
 //     console.log(doc);
 // });
 
@@ -54,19 +52,39 @@ const getQuizzesByCreatorId = async (id) => {
     }
     let arr = [];
     snap.forEach(doc => {
-        arr.push(doc.data());
+        let thing = doc.data();
+        thing.roomCode = doc.id;
+        arr.push(thing);
     });
     return arr;
 }
 
-// getQuiz('Basic Facts');
-getQuizzesByCreatorId("yGtGnQurwANstOO2rKMSsLF9roG2").then(arr => {
-    if (arr) {
-        for (doc of arr) {
-            console.log(doc);
-        }
+const getRoomCodes = async () => {
+    const quizzes = db.collection('quizzes').doc('rooms');
+    const doc = await quizzes.get();
+    if (!doc.exists) {
+        console.log("failed");
+        return null;
     }
-});
+    else {
+        return doc.data().codes;
+    }
+}
+
+// getQuiz('Basic Facts');
+// getQuizzesByCreatorId("i4pArCZaNKcnmUTK4nM2IA0muJ02").then(arr => {
+//     if (arr) {
+//         for (doc of arr) {
+//             console.log(doc);
+//         }
+//     }
+// });
+
+// getRoomCodes().then(arr => {
+//     if (arr) {
+//         console.log(arr);
+//     }
+// });
 
 // .then((docs) => {
 //     docs.forEach(doc => {
@@ -246,6 +264,7 @@ io.on('connection', (socket) => {
         });
     });
     socket.on('getQuizNamesById', async (id) => {
+        console.log('get all quizes from this user');
         const quizzes = await getQuizzesByCreatorId(id);
         const ans = quizzes.map((x) => {
             return { name: x.name, code: x.roomCode };
@@ -262,7 +281,7 @@ io.on('connection', (socket) => {
                 emailVerified: false,
 
                 password: data.signin_pass,
-                displayName: data.signin_user
+                // displayName: data.signin_user
             })
             .then((userRecord) => {
                 // See the UserRecord reference doc for the contents of userRecord.
@@ -289,6 +308,12 @@ io.on('connection', (socket) => {
 
     // });
 
+    socket.on('get_one_quiz', async (code) => {
+        console.log('Get quiz at room ' + code);
+        const quiz = await getQuizByCode(code);
+        socket.emit('get_one_quiz', quiz);
+    });
+
     socket.on('getUsername', (data) => {
         console.log('User id is ' + data.creator)
         admin
@@ -304,17 +329,32 @@ io.on('connection', (socket) => {
             });
     })
 
-    socket.on('submit_quiz', ({ temp }) => {
-        console.log(data);
-        const quizzes = db.collection('quizzes');
-        quizzes.add({
-            temp
-        });
+    socket.on('createQuiz', async (id) => {
+        console.log("let's create a quiz!");
+        let codes = await getRoomCodes();
+        let gen_code = Math.floor(Math.random() * 10000);
+        while (codes.includes(gen_code)) {
+            gen_code = Math.floor(Math.random() * 10000);
+        }
+        const rooms = db.collection('quizzes').doc('rooms');
+        await rooms.update({ codes: admin.firestore.FieldValue.arrayUnion(gen_code.toString()) });
 
+        const temp = { creatorId: id, name: 'Untitled', questions: [] };
+        await db.collection('quizzes').doc(gen_code.toString()).set(temp);
 
+        socket.emit('quizCreated', gen_code.toString());
+    });
 
-
+    socket.on('submit_quiz', async ({ quiz, code }) => {
+        const res = await db.collection('quizzes').doc(code).delete();
+        await db.collection('quizzes').doc(code).set(quiz);
+        socket.emit('quizSaved');
     })
+
+    socket.on('deleteQuiz', async (code) => {
+        const res = await db.collection('quizzes').doc(code).delete();
+        console.log(`Quiz ${code} succesfully deleted`);
+    });
 
 
 

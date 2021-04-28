@@ -50,7 +50,9 @@ function QuizBox(props) {
 }
 
 function Icon(props) {
-    const { quizzes, setQuizzes, setPopup, setPopIndex } = useContext(QuizzesContext);
+    const { quizzes, setQuizzes } = useContext(QuizzesContext);
+    const { setEditCode } = useContext(CreatorContext);
+    const { setPage, socket } = useContext(GlobalContext);
 
     const sym = props.sym;
     const i = props.i;
@@ -59,16 +61,22 @@ function Icon(props) {
     let icon = sym === 'S' ? 'play_arrow' : 'edit';
     icon = sym === 'D' ? 'delete' : icon;
 
-    const click = () => {
+    const click = async () => {
         const name = quizzes[i].name;
+        const code = quizzes[i].code;
         if (sym === 'S') {
             console.log(`Start quiz ${name}`);
         }
         else if (sym === 'E') {
             console.log(`Edit quiz ${name}`)
+            await setEditCode(code);
+            console.log('set edit code to ' + code);
+
+            setPage('quiz');
         }
         else if (sym === 'D') {
             let temp = JSON.parse(JSON.stringify(quizzes));
+            socket.emit('deleteQuiz', code);
             console.log(`Delete quiz ${name}`);
             temp.splice(i, 1);
             setQuizzes(temp);
@@ -77,57 +85,89 @@ function Icon(props) {
     }
     return (
         <div id={id} onClick={click} className='icon'>
-            <i className="material-icons mid-36">{icon}</i>
+            <i className="material-icons">{icon}</i>
         </div>
     )
 }
 
-// function Popup(props) {
-
-//     const { quizzes, setQuizzes, setPopup, popIndex, setPopIndex } = useContext(QuizzesContext);
-
-
-//     return (
-//         <div className='popup'>
-//             <p className='title'>{quizzes[popIndex].name}</p>
-//         </div>
-//     );
-// }
+const AddQuiz = () => {
+    const { socket, page, setPage } = useContext(GlobalContext);
+    const { quizzes, setQuizzes, setPopup, setPopIndex } = useContext(QuizzesContext);
+    const { creator } = useContext(CreatorContext);
+    const add = () => {
+        let temp = JSON.parse(JSON.stringify(quizzes));
+        console.log(`Create new quiz`);
+        socket.emit('createQuiz', creator);
+    };
+    return (
+        <div className='icon' onClick={add}>
+            <i className="material-icons">add</i>
+        </div>
+    )
+};
 
 function CreatorPage(props) {
     const { socket, page, setPage } = useContext(GlobalContext);
-    const { creator } = useContext(CreatorContext);
-
-    socket.emit('getQuizNamesById', creator);
-
+    const { creator, setEditCode } = useContext(CreatorContext);
 
     // const [quizzes, setQuizzes] = useState([
     //     { name: '330 Quiz 1', code: '0214' },
     //     { name: '217 Quiz 2', code: '1623' },
     //     { name: 'Basic Facts', code: '1234' }
     // ]);
-    const [quizzes, setQuizzes] = useState([{}]);
+    const [quizzes, setQuizzes] = useState();
+
+    // if (!quizzes || (quizzes && !quizzes[0].hasOwnProperty('name'))) {
+    useEffect(() => {
+        // console.log("hmm");
+        socket.emit('getQuizNamesById', creator);
+        // setQuizzes([{}]
+    }, []);
 
     useEffect(() => {
-        socket.on('getQuizNamesById', (data) => setQuizzes(data));
+        socket.on('quizCreated', async (code) => {
+            await setEditCode(code);
+            console.log('set edit code to ' + code);
+            setPage('quiz');
+        });
+    }, [socket, setEditCode]);
+
+    // else {
+    //     console.log(quizzes[0].name);
+    // }
+
+    useEffect(() => {
+        socket.on('getQuizNamesById', async (data) => {
+            setQuizzes(data);
+            console.log('got it at least');
+            console.log(data);
+        });
     }, [socket, setQuizzes]);
 
-    const [popup, setPopup] = useState(false);
-    const [popIndex, setPopIndex] = useState(-1);
-
-    let allQuizzes = quizzes.map((quiz, index) => {
+    let quizMap;
+    if (quizzes) {
+        quizMap = quizzes;
+    }
+    else {
+        quizMap = [{}];
+    }
+    let allQuizzes = quizMap.map((quiz, index) => {
         return <QuizBox key={index} index={index}></QuizBox>
     });
 
-    const cont = { quizzes, setQuizzes, popup, setPopup, popIndex, setPopIndex }
+
+    const cont = { quizzes, setQuizzes }
 
     return (
         <QuizzesContext.Provider value={cont}>
             <div className='questions'>
                 {/* <Box just='left' name='Create a Game'></Box>
                 <Box just='right' name='Manage/Start Games'></Box> */}
-                {allQuizzes && allQuizzes}
+                {quizzes && allQuizzes}
                 {/* {popup && <Popup></Popup>} */}
+                <AddQuiz></AddQuiz>
+                <br></br>
+                <br></br>
             </div>
         </QuizzesContext.Provider>
     );

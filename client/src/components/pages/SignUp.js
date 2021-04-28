@@ -30,7 +30,7 @@ function SignUp() {
         // console.log(signin_email)
         // console.log(signin_pass)
         // console.log(firebase)
-        let signup_object = { 'signin_user': signin_user, 'signin_email': signin_email, 'signin_pass': signin_pass }
+        let signup_object = { signin_email: signin_email, signin_pass: signin_pass }
         e.preventDefault();
         socket.emit('creatorSignUp', signup_object)
         // setPage('creator_home')
@@ -56,8 +56,8 @@ function SignUp() {
             <form id='signup_form'>
                 <input id="email" onChange={n => handleEmail(n)} placeholder="E-mail" type="text"></input>
                 <br></br>
-                <input id="user" placeholder="Username" onChange={n => handleUser(n)} type="text"></input>
-                <br></br>
+                {/* <input id="user" placeholder="Username" onChange={n => handleUser(n)} type="text"></input>
+                <br></br> */}
                 <input id="pass" placeholder="Password" onChange={n => handlePass(n)} type="text"></input>
                 <br></br>
                 <input id="sign_up" type="submit" value="Sign Up" onClick={n => handleSignUp(n)}></input>

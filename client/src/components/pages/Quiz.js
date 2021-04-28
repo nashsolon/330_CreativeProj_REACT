@@ -90,30 +90,13 @@ function QuizName() {
 function SubmitQuiz() {
     const { socket } = useContext(GlobalContext);
     const { quiz, setQuiz } = useContext(QuizContext);
+    const { editCode, setEditCode } = useContext(CreatorContext);
     const { creator } = useContext(CreatorContext);
 
-
-
-
     function handleSubmitQuiz() {
-        let gen_code = Math.floor(Math.random() * 10000)
-        console.log(gen_code)
-
-        let temp = JSON.parse(JSON.stringify(quiz));
-        temp.creatorId = creator;
-        temp.roomCode = gen_code;
-        setQuiz(temp);
-        console.log('submitted');
-        socket.emit('submit_quiz', { temp })
-
+        socket.emit('submit_quiz', { quiz: quiz, code: editCode })
+        // setEditCode('');
     }
-
-
-    console.log(quiz)
-
-    useEffect(() => {
-        // socket.
-    })
     return (
 
         <div className='submitQuiz' onClick={handleSubmitQuiz}>
@@ -151,10 +134,39 @@ function Quiz(props) {
     //         }
     //     ]
     // });
-    const [quiz, setQuiz] = useState(props.quiz);
-    let questions = quiz.questions;
+    const [quiz, setQuiz] = useState();
+    const { editCode, setEditCode } = useContext(CreatorContext);
+    const { socket, setPage } = useContext(GlobalContext);
+
+    useEffect(() => {
+        console.log(editCode);
+        socket.emit('get_one_quiz', editCode);
+        console.log("asked for quiz " + editCode);
+    }, []);
+
+    useEffect(() => {
+        socket.on('get_one_quiz', q => {
+            console.log("received a quiz");
+            console.log(q);
+            setQuiz(q);
+        })
+    }, [socket, quiz, setQuiz]);
+
+    useEffect(() => {
+        socket.on('quizSaved', () => setPage('creator_home'));
+    }, [socket, setPage]);
+
+    // let questions = quiz.questions;
     // console.log(`Question type is ${Array.isArray(questions)}`);
-    const questionsComp = questions.map((q, index) => {
+
+    let qMap;
+    if (quiz) {
+        qMap = quiz.questions;
+    }
+    else {
+        qMap = [];
+    }
+    const questionsComp = qMap.map((q, index) => {
         return <Question key={index} index={index}></Question>
         // return <p>q</p>;
     });
@@ -162,8 +174,8 @@ function Quiz(props) {
     return (
         <QuizContext.Provider value={{ quiz, setQuiz }}>
             <div className='questions'>
-                <QuizName></QuizName>
-                {quiz.questions[0] && questionsComp}
+                {quiz && (<QuizName></QuizName>)}
+                {quiz && questionsComp}
                 {/* {!quiz.questions[0] && (<LooksEmpty></LooksEmpty>)} */}
                 <AddQuestion></AddQuestion>
                 <SubmitQuiz></SubmitQuiz>

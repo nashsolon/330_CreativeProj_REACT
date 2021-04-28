@@ -5,15 +5,25 @@ import CreatorContext from '../context/CreatorContext'
 import firebase from 'firebase'
 
 
-var firebaseConfig = {
-    apiKey: "AIzaSyDurndzEwOnC_F37eV3DlqtubC8CLfa4cg",
-    authDomain: "quiz-d961a.firebaseapp.com",
-    projectId: "quiz-d961a",
-    storageBucket: "quiz-d961a.appspot.com",
-    messagingSenderId: "939117159928",
-    appId: "1:939117159928:web:48013a6452deae99a3a20d",
-    measurementId: "G-EBC41P964R"
+// const firebaseConfig = {
+//     apiKey: "AIzaSyDurndzEwOnC_F37eV3DlqtubC8CLfa4cg",
+//     authDomain: "quiz-d961a.firebaseapp.com",
+//     projectId: "quiz-d961a",
+//     storageBucket: "quiz-d961a.appspot.com",
+//     messagingSenderId: "939117159928",
+//     appId: "1:939117159928:web:48013a6452deae99a3a20d",
+//     measurementId: "G-EBC41P964R"
+// };
+const firebaseConfig = {
+    apiKey: "AIzaSyDjMUfS5yidejhhj7GouigAs1Af2_sjCMI",
+    authDomain: "quiz-game-4f35d.firebaseapp.com",
+    projectId: "quiz-game-4f35d",
+    storageBucket: "quiz-game-4f35d.appspot.com",
+    messagingSenderId: "315908970854",
+    appId: "1:315908970854:web:b211ddaea2b1c1d77250a7",
+    measurementId: "G-THCX4VKE2D"
 };
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth()
