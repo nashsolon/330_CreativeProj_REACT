@@ -1,5 +1,5 @@
 
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import GlobalContext from '../GlobalContext';
 
 function HostGameHeader(props) {
@@ -150,8 +150,9 @@ function HostGame() {
     const [qs, setQs] = useState();
     const code = '1234';
 
-
-    socket.emit('hostGame', code);
+    useEffect(() => {
+        socket.emit('hostGame', code);
+    }, [socket]);
 
     const [data, setData] = useState();
     //     { name: "Nick", score: 120 },
