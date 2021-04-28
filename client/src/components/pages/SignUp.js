@@ -1,6 +1,7 @@
 import GlobalContext from '../GlobalContext';
 import { React, useState, useContext, useEffect } from 'react';
 import { BackButton } from '../items';
+import CreatorContext from '../context/CreatorContext';
 // import CreatorContext from '../context/CreatorContext';
 
 function SignUp() {

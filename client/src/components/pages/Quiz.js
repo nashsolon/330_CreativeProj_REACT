@@ -93,8 +93,8 @@ function SubmitQuiz() {
     const { editCode, setEditCode } = useContext(CreatorContext);
     const { creator } = useContext(CreatorContext);
 
-    function handleSubmitQuiz() {
-        socket.emit('submit_quiz', { quiz: quiz, code: editCode })
+    async function handleSubmitQuiz () {
+        await socket.emit('submit_quiz', { quiz: quiz, code: editCode })
         // setEditCode('');
     }
     return (
@@ -152,8 +152,8 @@ function Quiz(props) {
         })
     }, [socket, quiz, setQuiz]);
 
-    useEffect(() => {
-        socket.on('quizSaved', () => setPage('creator_home'));
+    useEffect(async () => {
+         await socket.on('quizSaved', () => setPage('creator_home'));
     }, [socket, setPage]);
 
     // let questions = quiz.questions;

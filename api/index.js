@@ -266,9 +266,16 @@ io.on('connection', (socket) => {
     socket.on('getQuizNamesById', async (id) => {
         console.log('get all quizes from this user');
         const quizzes = await getQuizzesByCreatorId(id);
-        const ans = quizzes.map((x) => {
-            return { name: x.name, code: x.roomCode };
-        });
+        console.log('User quizzes is ' + quizzes)
+        let ans; //needed to declare ans out here
+        if(quizzes != null){
+            ans = quizzes.map((x) => {
+                return { name: x.name, code: x.roomCode };
+            });
+        }
+        else{
+            ans = []; //Fixed sign up here
+        }
         socket.emit('getQuizNamesById', ans);
     });
     socket.on('creatorSignUp', (data) => {

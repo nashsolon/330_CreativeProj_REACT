@@ -5,6 +5,7 @@ import CreatorContext from '../context/CreatorContext';
 // import { QuizBox, Box } from '../items';
 import UserContext from '../context/UserContext';
 import { useSpring, animated } from 'react-spring';
+import Quiz from './Quiz';
 
 
 const QuizzesContext = createContext();
@@ -41,9 +42,9 @@ function QuizBox(props) {
                 </div>
             )} */}
             <animated.div className='icons' style={enterRight} >
-                <Icon sym={'S'} i={i}></Icon>
-                <Icon sym={'E'} i={i}></Icon>
-                <Icon sym={'D'} i={i}></Icon>
+                <Icon sym={'S'} i={i} code = {props.code}></Icon>
+                <Icon sym={'E'} i={i} code = {props.code}></Icon>
+                <Icon sym={'D'} i={i} code = {''}></Icon>
             </animated.div>
         </div>
     );
@@ -67,6 +68,7 @@ function Icon(props) {
         if (sym === 'S') {
             console.log(`Start quiz ${name}`);
         }
+    
         else if (sym === 'E') {
             console.log(`Edit quiz ${name}`)
             await setEditCode(code);
@@ -81,8 +83,9 @@ function Icon(props) {
             temp.splice(i, 1);
             setQuizzes(temp);
         }
-
     }
+
+    
     return (
         <div id={id} onClick={click} className='icon'>
             <i className="material-icons">{icon}</i>
