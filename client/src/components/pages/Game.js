@@ -27,8 +27,8 @@ function Game(props) {
     const [playing, setPlaying] = useState(false);
     const [rank, setRank] = useState('1');
     const [score, setScore] = useState('0');
-    const { socket } = useContext(GlobalContext);
-    const { username } = useContext(UserContext);
+    const { socket, setPage } = useContext(GlobalContext);
+    const { username, setUsername } = useContext(UserContext);
     const [corr, setCorr] = useState(-1);
 
     useEffect(() => {
@@ -38,6 +38,13 @@ function Game(props) {
             setPlaying(true);
         });
     }, [socket, setPlaying]);
+
+    useEffect(() => {
+        socket.on('gameOver', () => {
+            setUsername('');
+            setPage('join')
+        });
+    });
 
     useEffect(() => {
         socket.on('playerChange', ({ players }) => {

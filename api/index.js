@@ -132,13 +132,25 @@ let data =
     }
 };
 
+
+const endGame = (room) => {
+    console.log("Game Over");
+    io.to(room).emit('gameOver');
+    // delete data.rooms[room];
+    // let ppl = io.sockets.adapter.rooms[room];
+    // console.log(ppl);
+    // ((error, sIds) => {
+    //     if (error) throw error;
+    //     sIds.forEach((s) => io.sockets.connected[s].disconnect(true));
+    // });
+};
+
 const roundOver = (room) => {
     console.log('all users have answered');
     data.rooms[room].stats.round++;
     io.to(room).emit('playerChange', { players: rankPlayers(room) })
     if (data.rooms[room].stats.round === data.rooms[room].questions.length) {
-        io.to(room).emit('gameOver');
-        console.log('game over');
+        endGame(room);
         return;
     }
     io.to(room).emit('roundOver');
@@ -201,6 +213,7 @@ function rankPlayers(room) {
     // console.log(info);
     return info;
 }
+
 
 
 io.on('connection', (socket) => {
