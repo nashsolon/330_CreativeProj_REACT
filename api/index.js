@@ -258,6 +258,8 @@ io.on('connection', (socket) => {
         let question = { q: q, a: temp, c: temp.indexOf(c) }
         io.to(code).emit('startGame', question);
     });
+    socket.on('roundOver', ({ code }) => roundOver(code));
+
     socket.on('hostGame', async (code) => {
         let quiz = await getQuizByCode(code);
         data.rooms[code] = quiz;

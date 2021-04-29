@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import GlobalContext from '../GlobalContext';
 import CreatorContext from '../context/CreatorContext';
 import { BackButton } from '../items';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 
 function HostGameHeader(props) {
     return (
@@ -150,6 +151,7 @@ function HostGame() {
     const { socket } = useContext(GlobalContext);
     const { editCode } = useContext(CreatorContext);
     const [qs, setQs] = useState();
+    const [key, setKey] = useState(0);
     // const code = '1234';
 
     useEffect(() => {
@@ -163,32 +165,54 @@ function HostGame() {
         socket.emit('startGame', { code: editCode });
         // setMode('play');
     };
-    useState(() => {
+    useEffect(() => {
         socket.on('startGame', (question) => {
             setQs({ q: question.q, a: question.a });
             setMode('play');
+            setKey(prev => prev + 1);
         });
     }, [socket, setMode]);
-    useState(() => {
+    useEffect(() => {
         socket.on('playerChange', ({ players }) => {
             console.log(players);
             setData(players);
         });
     }, [socket, setData]);
 
-    useState(() => {
+    useEffect(() => {
         socket.on('roundOver', () => {
+            console.log('received round over');
             setMode('scores');
-            setTimeout(() => socket.emit('startGame', { code: editCode }), 5000);
+            setKey(prev => prev + 1);
         });
     })
 
     const bBtn = (<BackButton page='creator_home'></BackButton>);
+    const timeText = (remainingTime, elapsedTime) => {
+        return (<p id='timerTime'>{remainingTime}</p>);
+    }
 
     if (mode === 'play') {
         return (
             <div>
                 <InGame data={qs}></InGame>
+                <div className='timer'>
+                    <CountdownCircleTimer
+                        onComplete={() => {
+                            console.log('times up, end round: ' + editCode);
+                            socket.emit('roundOver', { code: editCode });
+                        }}
+                        key={key}
+                        isPlaying
+                        duration={20}
+                        colors={
+                            [['#A347B7', 0.33],
+                            ['#27B8FF', 0.33],
+                            ['#66AAA3', 0.33]
+                            ]}
+                        children={({ remainingTime, elapsedTime }) => timeText(remainingTime, elapsedTime)}
+                    />
+                </div>
                 {bBtn}
             </div>
         );
@@ -197,6 +221,23 @@ function HostGame() {
         return (
             <div>
                 <Scores data={data}></Scores>
+                <div className='timer'>
+                    <CountdownCircleTimer
+                        onComplete={() => {
+                            console.log('times up, restart!');
+                            socket.emit('startGame', { code: editCode });
+                        }}
+                        key={key}
+                        isPlaying
+                        duration={10}
+                        colors={
+                            [['#A347B7', 0.33],
+                            ['#27B8FF', 0.33],
+                            ['#66AAA3', 0.33]
+                            ]}
+                        children={({ remainingTime, elapsedTime }) => timeText(remainingTime, elapsedTime)}
+                    />
+                </div>
                 {bBtn}
             </div>
         );

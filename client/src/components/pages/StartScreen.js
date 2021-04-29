@@ -1,6 +1,7 @@
 import React from 'react';
 import Box from '../items/Box';
 
+
 function StartScreen(props) {
 
     return (
@@ -9,6 +10,7 @@ function StartScreen(props) {
             <Box name="Join" just="left"></Box>
         </div>
     );
+
 }
 
 export default StartScreen;
