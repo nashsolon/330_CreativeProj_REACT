@@ -184,6 +184,14 @@ function HostGame() {
             setData(players);
         });
     }, [socket, setData]);
+
+    useState(() => {
+        socket.on('roundOver', () => {
+            setMode('scores');
+            setTimeout(() => socket.emit('startGame', { code: editCode }), 5000);
+        });
+    })
+
     if (mode === 'play') {
         return (
             <InGame data={qs}></InGame>

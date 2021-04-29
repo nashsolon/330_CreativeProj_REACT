@@ -39,6 +39,32 @@ function Game(props) {
         });
     }, [socket, setPlaying]);
 
+    useEffect(() => {
+        socket.on('playerChange', ({ players }) => {
+            let me;
+            for (let p of players) {
+                if (p.name === username) {
+                    me = p;
+                    break;
+                }
+            }
+            if (!me)
+                console.log("You don't exist, " + username);
+            else {
+                setScore(me.score);
+                const rank = players.indexOf(me) + 1;
+                setRank(rank);
+            }
+        });
+    });
+
+    useEffect(() => {
+        socket.on('roundOver', () => {
+            setCorr(-1)
+            setPlaying(false);
+        });
+    });
+
     const userClick = ((n) => {
         if (clicked === "") {
             setClicked(n);

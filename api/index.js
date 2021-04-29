@@ -94,7 +94,7 @@ const getRoomCodes = async () => {
 
 const io = socketio(http, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: 'http://172.27.123.188:3000',
         methods: ['GET', 'POST']
     }
 });
@@ -132,15 +132,21 @@ let data =
     }
 };
 
-// const quiz =
-// {
-//     questions: {
-//         1: { q: 'How many days are in a week?', c: '7', i: ['4', '9', '2'] },
-//         2: { q: 'How many months are in a year?', c: '12', i: ['10', '14', '24'] }
-//     },
+const roundOver = (room) => {
+    console.log('all users have answered');
+    data.rooms[room].stats.round++;
+    io.to(room).emit('playerChange', { players: rankPlayers(room) })
+    if (data.rooms[room].stats.round === data.rooms[room].questions.length) {
+        io.to(room).emit('gameOver');
+        console.log('game over');
+        return;
+    }
+    io.to(room).emit('roundOver');
+    for (person of data.rooms[room].users) {
+        person.answered = false;
+    }
 
-//     roomCode: '1234'
-// };
+}
 
 function shuffle(array) {
     array.sort(() => Math.random() - 0.5);
@@ -176,13 +182,13 @@ function joinWithName(name, room, socket) {
     else {
         socket.username = name;
         console.log("Name available");
-        data.rooms[room].users.push({ name: name, score: 0 });
+        data.rooms[room].users.push({ name: name, answered: false, score: 0 });
         console.log(data.rooms);
         socket.emit('join-with-name', { res: 1, name: name, reason: 'na' });
         console.log('Here we are')
         console.log(data.rooms[room].users);
         //io.to(room)
-        io.emit('playerChange', { players: data.rooms[room].users })
+        io.to(room).emit('playerChange', { players: data.rooms[room].users })
     }
 }
 
@@ -192,7 +198,8 @@ function rankPlayers(room) {
         return b.score - a.score;
     });
     console.log("Sorted order is:");
-    console.log(info);
+    // console.log(info);
+    return info;
 }
 
 
@@ -209,42 +216,39 @@ io.on('connection', (socket) => {
     });
     socket.on('userClick', ({ user, ans }) => {
         // console.log(`${user} clicked on ${ans}; is it correct?`);
-        let points;
-        switch (user) {
-            case "Nash":
-                points = 10;
-                break;
-            case "Max":
-                points = 20;
-                break;
-            case "Sasha":
-                points = 100;
-                break;
-            default:
-                points = 50;
-                break;
+        let points = 100;
+        let count = 0;
+        for (this_user of data.rooms[socket.room].users) {
+            if (this_user.name === user) {
+                if (ans)
+                    this_user.score += points;
+                this_user.answered = true;
+                count++;
+                // break;
+            }
+            else if (this_user.answered)
+                count++;
         }
+        console.log('the count is: ' + count);
+        console.log('the players are: ' + data.rooms[socket.room].users.length)
         if (ans) {
             console.log(`${user} was correct! They earned ${points} points.`);
-            for (this_user of data.rooms[socket.room].users) {
-                if (this_user.name === user) {
-                    this_user.score += points;
-                    break;
-                }
-            }
-            // data.rooms[socket.room].users[user].score += points;
-            // console.log(data.rooms[socket.room]);
+
         }
         else {
             console.log(`${user} was incorrect :(`);
         }
-        rankPlayers(socket.room);
+        if (count === data.rooms[socket.room].users.length) {
+            roundOver(socket.room);
+        }
+
+        // rankPlayers(socket.room);
     });
 
     socket.on('startGame', ({ code }) => {
         console.log(`Start game: ${code}`);
         // io.to(code)
-        let round = '2';
+        let round = data.rooms[code].stats.round;
         // { q: 'How many days are in a week?', a: ['7', '4', '9', '2'] }
         let { q, c, i1, i2, i3 } = data.rooms[code].questions[round];
         let temp = [c, i1, i2, i3];
@@ -252,28 +256,30 @@ io.on('connection', (socket) => {
         shuffle(temp);
         console.log(temp);
         let question = { q: q, a: temp, c: temp.indexOf(c) }
-        io.emit('startGame', question);
+        io.to(code).emit('startGame', question);
     });
-    socket.on('hostGame', (code) => {
-        getQuizByCode(code).then(quiz => {
-            data.rooms[code] = quiz;
-            delete data.rooms[code].roomCode;
-            data.rooms[code].users = [];
-            data.rooms[code].stats = { round: 1 };
-            console.log(data);
-        });
+    socket.on('hostGame', async (code) => {
+        let quiz = await getQuizByCode(code);
+        data.rooms[code] = quiz;
+        socket.join(code);
+        // delete data.rooms[code].roomCode;
+        data.rooms[code].users = [];
+        data.rooms[code].stats = { round: 0 };
+        console.log(data);
+        console.log(data.rooms[code]);
+
     });
     socket.on('getQuizNamesById', async (id) => {
         console.log('get all quizes from this user');
         const quizzes = await getQuizzesByCreatorId(id);
         console.log('User quizzes is ' + quizzes)
         let ans; //needed to declare ans out here
-        if(quizzes != null){
+        if (quizzes != null) {
             ans = quizzes.map((x) => {
                 return { name: x.name, code: x.roomCode };
             });
         }
-        else{
+        else {
             ans = []; //Fixed sign up here
         }
         socket.emit('getQuizNamesById', ans);
@@ -292,7 +298,7 @@ io.on('connection', (socket) => {
             })
             .then((userRecord) => {
                 // See the UserRecord reference doc for the contents of userRecord.
-                let data = { 'signin': true, creatorId:  userRecord.uid}
+                let data = { 'signin': true, creatorId: userRecord.uid }
                 socket.emit('creatorSignUp', data)
                 console.log('Successfully created new user:', userRecord.uid);
             })

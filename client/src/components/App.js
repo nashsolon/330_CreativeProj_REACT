@@ -6,7 +6,8 @@ import Page from './Page'
 import io from 'socket.io-client';
 // const io = require('socket.io-client');
 
-const socket = io.connect('http://localhost:5000');
+// const socket = io.connect('http://localhost:5000');
+const socket = io.connect('http://172.27.123.188:5000');
 
 // const socket = io();
 

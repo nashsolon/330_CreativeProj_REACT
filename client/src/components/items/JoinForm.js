@@ -14,14 +14,14 @@ function JoinForm() {
     const fade = useSpring({ opacity: failure ? '1' : '0' });
     const fadeTime = 2000;
 
-    function handleChange(e) {
+    const handleChange = (e) => {
         setValue(e.target.value);
     }
-    function handleSubmit(e) {
+    const handleSubmit = (e) => {
         setFailure(false);
         // setTempCode(value)
         console.log('Go to room ' + value);
-        socket.emit("joinRoom", value);
+        socket.emit('joinRoom', value);
         e.preventDefault();
     }
     useEffect(() => {
