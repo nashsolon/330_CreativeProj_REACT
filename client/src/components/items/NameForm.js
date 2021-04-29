@@ -38,7 +38,10 @@ function NameForm() {
     }, [socket, setUsername, setPage]);
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className='formFlex' autoComplete="off" onSubmit={handleSubmit}>
+            <div id="text">
+                <strong>Enter Name:</strong>
+            </div>
             <input id="code" value={value} onChange={handleChange} type="text" maxLength="15"></input>
             <br></br>
             <input id="joinRoom" type="submit" value="Join"></input>

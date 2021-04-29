@@ -74,18 +74,19 @@ body
         font-size: 30pt
         text-align: center
         filter: brightness(1)
-        transition: filter $tr-time
+        transition: filter $tr-time, transform $tr-time
+        color: white
         // left: 50%
         // transform: translate(-50%, 0)
 
         &.left
 
-            background-color: lightblue
+            background-color: #6b1760
             // left: 0
             // top: 0
 
         &.right
-            background-color: rgb(170, 240, 170)
+            background-color: rgb(45, 163, 179)
             // margin-top: 0px
             // right: 0
             // top: 0
@@ -99,6 +100,7 @@ body
         &:hover
             filter: brightness(0.8)
             cursor: pointer
+            transform: scale(1.1)
 
 #game_creator
     position: absolute
@@ -111,39 +113,45 @@ $codeInputWidth: 210px
     position: absolute
     width: 100%
     height: 100%
-    margin-top: 100px
+    // margin-top: 100px
     text-align: center
     font-family: 'Quicksand'
     font-size: 30pt
+    display: flex
+    align-items: center
+    justify-content: center
 
-    #text
-        font-weight: bold
-        color: white
+    .formFlex
 
-    #code
-        margin: 20px
-        width: $codeInputWidth
-        background-color: #FFFFFF00
-        border-bottom: $borderBottom
-        color: white
+        #text
+            font-weight: bold
+            color: white
 
-    #joinRoom
-        height: 53px
-        width: $codeInputWidth
-        background-color: $joinColor
-        color: white
-        text-align: center
-        font-weight: bold
-        left: 50%
-        margin: 0 auto
-        filter: brightness(1)
-        transition: filter $tr-time
-        border-radius: $bRadius
-        box-shadow: $shadow
+        #code
+            margin: 20px
+            width: $codeInputWidth
+            background-color: #FFFFFF00
+            border-bottom: $borderBottom
+            color: white
 
-        &:hover
-            filter: brightness(0.8)
-            cursor: pointer
+        #joinRoom
+            height: 53px
+            width: $codeInputWidth
+            background-color: $joinColor
+            color: white
+            text-align: center
+            font-weight: bold
+            left: 50%
+            margin: 0 auto
+            filter: brightness(1)
+            transition: filter $tr-time
+            border-radius: $bRadius
+            box-shadow: $shadow
+
+            &:hover
+                filter: brightness(0.8)
+                cursor: pointer
+
 $signUpWidth: $codeInputWidth + 100px
 #signup_form
     position: absolute
@@ -235,8 +243,8 @@ $loginInputWidth: 350px
 #backButton
     color: #a9cefc
     position: fixed
-    top: 0px
-    left: 55px
+    top: -20px
+    left: 30px
     filter: brightness(1)
 
     transform: scale(-1, 1)
@@ -248,9 +256,11 @@ $loginInputWidth: 350px
     // text-shadow: $shadow
 
     transition: filter $tr-time
+    transition: transform $tr-time
     font-size: 30pt
 
     &:hover
+        // transform: scale(-1.1, -1.1)
         filter: brightness(0.8)
         cursor: pointer
 

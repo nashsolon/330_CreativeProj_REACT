@@ -39,7 +39,10 @@ function JoinForm() {
         });
     }, [socket, setRoomcode, setPage]);
     return (
-        <form onSubmit={handleSubmit}>
+        <form className='formFlex' autoComplete="off" onSubmit={handleSubmit}>
+            <div id="text">
+                <strong>Enter Code:</strong>
+            </div>
             <input id="code" value={value} onChange={handleChange} type="text" maxLength="4"></input>
             <br></br>
             <input id="joinRoom" type="submit" value="Join"></input>

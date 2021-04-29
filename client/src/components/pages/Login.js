@@ -85,7 +85,7 @@ function Login() {
 
     return (
         <div className="loginForm">
-            <form id='login_form'>
+            <form autoComplete="off" id='login_form'>
                 <input id="email" placeholder="Email" onChange={n => handleEmailChange(n)} type="text"></input>
                 <br></br>
                 <input id="pass" placeholder="Password" onChange={n => handlePassChange(n)} type="password"></input>

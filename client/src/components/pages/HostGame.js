@@ -2,6 +2,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import GlobalContext from '../GlobalContext';
 import CreatorContext from '../context/CreatorContext';
+import { BackButton } from '../items';
 
 function HostGameHeader(props) {
     return (
@@ -156,17 +157,7 @@ function HostGame() {
     }, [socket]);
 
     const [data, setData] = useState();
-    //     { name: "Nick", score: 120 },
-    //     { name: "Jason", score: 110 },
-    //     { name: "Paul", score: 50 },
-    //     { name: "Nash", score: 20 },
-    //     { name: "Max", score: 10 },
-    //     { name: "Sasha", score: 8 },
-    //     { name: "Michael", score: 8 },
-    //     { name: "Kyle", score: 6 },
-    //     { name: "Pranay", score: 1 }
-    // ]);
-    // console.log(data)
+
     const [mode, setMode] = useState('wait');
     const startGame = () => {
         socket.emit('startGame', { code: editCode });
@@ -192,19 +183,30 @@ function HostGame() {
         });
     })
 
+    const bBtn = (<BackButton page='creator_home'></BackButton>);
+
     if (mode === 'play') {
         return (
-            <InGame data={qs}></InGame>
+            <div>
+                <InGame data={qs}></InGame>
+                {bBtn}
+            </div>
         );
     }
     else if (mode === 'scores') {
         return (
-            <Scores data={data}></Scores>
+            <div>
+                <Scores data={data}></Scores>
+                {bBtn}
+            </div>
         );
     }
     else if (mode === 'wait') {
         return (
-            <Wait data={data} code={editCode} click={startGame}></Wait>
+            <div>
+                <Wait data={data} code={editCode} click={startGame}></Wait>
+                {bBtn}
+            </div>
         );
     }
 }
