@@ -102,47 +102,28 @@ const io = socketio(http, {
 let data =
 {
     rooms: {
-        '1111': {
-            users: [],
-            questions: {
-                '1': {
-                    i2: '9',
-                    i3: '2',
-                    q: 'How many days are in a week?',
-                    i1: '4',
-                    c: '7'
-                },
-                '2': {
-                    i2: '16',
-                    i1: '9',
-                    i3: '3',
-                    c: '12',
-                    q: 'How many months are in a year?'
-                },
-                '3': {
-                    i3: 'Mt. Nash',
-                    c: 'Mt. Everest',
-                    q: "What's the tallest mountain in the world?",
-                    i2: 'Mt. Denali',
-                    i1: 'K2'
-                }
-            }
-        },
-        'abcd': { users: [] }
     }
 };
 
 
-const endGame = (room) => {
-    console.log("Game Over");
+const endGame = async (room, socket) => {
+    console.log("Game Over for room " + room);
     io.to(room).emit('gameOver');
-    // delete data.rooms[room];
+
+    // const s = await io.of('/').in(room).fetchSockets();
+    // const sock = io.of('/').connected[s[0]];
+    socket.leave(room);
+
+    delete data.rooms[room];
     // let ppl = io.sockets.adapter.rooms[room];
     // console.log(ppl);
     // ((error, sIds) => {
     //     if (error) throw error;
     //     sIds.forEach((s) => io.sockets.connected[s].disconnect(true));
     // });
+    // io.of('/').in(room).disconnectSockets();
+    io.socketsLeave(room);
+    console.log(data);
 };
 
 const roundOver = (room) => {
@@ -150,7 +131,8 @@ const roundOver = (room) => {
     data.rooms[room].stats.round++;
     io.to(room).emit('playerChange', { players: rankPlayers(room) })
     if (data.rooms[room].stats.round === data.rooms[room].questions.length) {
-        endGame(room);
+        // endGame(room);
+        io.to(room).emit('allRoundsOver');
         return;
     }
     io.to(room).emit('roundOver');
@@ -229,7 +211,10 @@ io.on('connection', (socket) => {
     });
     socket.on('userClick', ({ user, ans }) => {
         // console.log(`${user} clicked on ${ans}; is it correct?`);
-        let points = 100;
+        const pointCalc = (round) => {
+            return 100 + 50 * round;
+        }
+        let points = pointCalc(data.rooms[socket.room].stats.round)
         let count = 0;
         for (this_user of data.rooms[socket.room].users) {
             if (this_user.name === user) {
@@ -261,7 +246,10 @@ io.on('connection', (socket) => {
     socket.on('startGame', ({ code }) => {
         console.log(`Start game: ${code}`);
         // io.to(code)
+
         let round = data.rooms[code].stats.round;
+        console.log(round);
+        console.log(data.rooms[code].questions[round]);
         // { q: 'How many days are in a week?', a: ['7', '4', '9', '2'] }
         let { q, c, i1, i2, i3 } = data.rooms[code].questions[round];
         let temp = [c, i1, i2, i3];
@@ -384,14 +372,22 @@ io.on('connection', (socket) => {
         console.log(`Quiz ${code} succesfully deleted`);
     });
 
+    socket.on('endGame', (code) => {
+        endGame(code, socket);
+    });
 
+    socket.on('logout', () => {
+        // console.log('LOGOUT THIS ONE');
+    });
 
     socket.on('disconnect', () => {
         if (socket.room) {
-            data.rooms[socket.room].users = data.rooms[socket.room].users.filter((x) => x.name != socket.username);
-            // delete data.rooms[socket.room].users[socket.username];
-            console.log(`${socket.username} disconnected from ${socket.room}`);
-            io.emit('playerChange', { players: data.rooms[socket.room].users })
+            if (data.rooms[socket.room]) {
+                data.rooms[socket.room].users = data.rooms[socket.room].users.filter((x) => x.name != socket.username);
+                // delete data.rooms[socket.room].users[socket.username];
+                console.log(`${socket.username} disconnected from ${socket.room}`);
+                io.emit('playerChange', { players: data.rooms[socket.room].users });
+            }
         }
     });
 });

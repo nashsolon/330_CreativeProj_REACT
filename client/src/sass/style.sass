@@ -7,7 +7,12 @@ $bRadius: 10px
 $shadow: 7px 7px 10px rgba(44, 44, 44, 0.315)
 $borderBottom: 3px solid #e7e7e7
 $joinColor: #9188e0
-// COMMENT
+
+$gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
+@mixin hover1
+    filter: brightness(0.8)
+    cursor: pointer
+    // COMMENT
 
 html, body
     height: 100%
@@ -261,8 +266,7 @@ $loginInputWidth: 350px
 
     &:hover
         // transform: scale(-1.1, -1.1)
-        filter: brightness(0.8)
-        cursor: pointer
+        @inlude hover1
 
 #userName
     position: absolute
@@ -311,20 +315,20 @@ $text_sec: #acacac
         right: 20px
         font-weight: normal
 
-.hostGameHeader
+@mixin header
     text-align: center
     font-size: 30pt
     color: $text_sec
     background-color: #1a1e27
     top: 0
     padding: 0
-    // position: absolute
     box-sizing: border-box
-    // position: absolute
-    // // width: 110%
     height: 100px
-    // // margin-left: -5%
     margin: 0
+
+.hostGameHeader
+    @include header
+
     p
         position: relative
         margin: 0
@@ -332,7 +336,32 @@ $text_sec: #acacac
         transform: translate(0,-50%)
         color: white
 
-$gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
+.quizzesHeader
+    @include header
+    // 
+    display: flex
+    align-items: center
+    justify-content: center
+    position: relative
+
+    strong
+        position: relative
+        margin: 0
+        // top: 50%
+        // transform: translate(0,-50%)
+        color: white
+    #logout
+        font-size: 25pt
+        position: absolute
+        top: 50%
+        transform: translate(0, -50%)
+        left: 25px
+        margin: 0
+
+        &:hover
+            @include hover1
+            //nice
+
 .gameButtons
     height: calc(100% - 80px)
     width: 100%

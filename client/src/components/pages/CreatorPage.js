@@ -10,9 +10,6 @@ import Quiz from './Quiz';
 
 const QuizzesContext = createContext();
 
-
-// import React from 'react';
-
 function QuizBox(props) {
     const i = props.index;
     const { quizzes, setQuizzes, setPopup, setPopIndex } = useContext(QuizzesContext);
@@ -23,9 +20,6 @@ function QuizBox(props) {
     }
 
     const [iconsVis, setIconsVis] = useState(false);
-    // onMouseOver={setIconsVis(true)} onMouseLeave={setIconsVis(false)}
-
-    // iconVis, NOT 'true'
     const enterRight = useSpring({ transform: iconsVis ? 'translate3d(0px,0px,0px)' : 'translate3d(300px,0px,0px)' });
     // style={enterRight}
 
@@ -42,9 +36,9 @@ function QuizBox(props) {
                 </div>
             )} */}
             <animated.div className='icons' style={enterRight} >
-                <Icon sym={'S'} i={i} code = {props.code}></Icon>
-                <Icon sym={'E'} i={i} code = {props.code}></Icon>
-                <Icon sym={'D'} i={i} code = {''}></Icon>
+                <Icon sym={'S'} i={i} code={props.code}></Icon>
+                <Icon sym={'E'} i={i} code={props.code}></Icon>
+                <Icon sym={'D'} i={i} code={''}></Icon>
             </animated.div>
         </div>
     );
@@ -70,7 +64,7 @@ function Icon(props) {
             console.log(`Start quiz ${name}`);
             setPage('hostgame')
         }
-    
+
         else if (sym === 'E') {
             console.log(`Edit quiz ${name}`)
             await setEditCode(code);
@@ -87,7 +81,7 @@ function Icon(props) {
         }
     }
 
-    
+
     return (
         <div id={id} onClick={click} className='icon'>
             <i className="material-icons">{icon}</i>
@@ -111,18 +105,24 @@ const AddQuiz = () => {
     )
 };
 
+function QuizzesHeader(props) {
+    const { socket } = useContext(GlobalContext);
+    return (
+        <div className="quizzesHeader">
+            <p id='logout' onClick={() => socket.emit('logout')}>Logout</p>
+            <strong>Quizzes</strong>
+            {/* <p>Login</p> */}
+        </div>
+    )
+}
+
 function CreatorPage(props) {
     const { socket, page, setPage } = useContext(GlobalContext);
     const { creator, setEditCode } = useContext(CreatorContext);
 
-    // const [quizzes, setQuizzes] = useState([
-    //     { name: '330 Quiz 1', code: '0214' },
-    //     { name: '217 Quiz 2', code: '1623' },
-    //     { name: 'Basic Facts', code: '1234' }
-    // ]);
     const [quizzes, setQuizzes] = useState();
 
-    // if (!quizzes || (quizzes && !quizzes[0].hasOwnProperty('name'))) {
+    /* #region socket effects */
     useEffect(() => {
         // console.log("hmm");
         socket.emit('getQuizNamesById', creator);
@@ -148,6 +148,7 @@ function CreatorPage(props) {
             console.log(data);
         });
     }, [socket, setQuizzes]);
+    /* #endregion */
 
     let quizMap;
     if (quizzes) {
@@ -165,11 +166,9 @@ function CreatorPage(props) {
 
     return (
         <QuizzesContext.Provider value={cont}>
+            <QuizzesHeader></QuizzesHeader>
             <div className='questions'>
-                {/* <Box just='left' name='Create a Game'></Box>
-                <Box just='right' name='Manage/Start Games'></Box> */}
                 {quizzes && allQuizzes}
-                {/* {popup && <Popup></Popup>} */}
                 <AddQuiz></AddQuiz>
                 <br></br>
                 <br></br>

@@ -30,17 +30,20 @@ function Game(props) {
     const { socket, setPage } = useContext(GlobalContext);
     const { username, setUsername } = useContext(UserContext);
     const [corr, setCorr] = useState(-1);
+    const [gameStage, setGameStage] = useState('wait');
 
     useEffect(() => {
         socket.on('startGame', ({ c }) => {
             setCorr(c);
             setClicked("");
+            setGameStage('play')
             setPlaying(true);
         });
     }, [socket, setPlaying]);
 
     useEffect(() => {
         socket.on('gameOver', () => {
+            console.log('the game has ended');
             setUsername('');
             setPage('join')
         });
@@ -63,14 +66,21 @@ function Game(props) {
                 setRank(rank);
             }
         });
-    });
+    }, [socket]);
 
     useEffect(() => {
         socket.on('roundOver', () => {
-            setCorr(-1)
+            setCorr(-1);
             setPlaying(false);
         });
-    });
+    }, [socket]);
+    useEffect(() => {
+        socket.on('allRoundsOver', () => {
+            setCorr(-1);
+            setGameStage('done');
+            setPlaying(false);
+        });
+    }, [socket]);
 
     const userClick = ((n) => {
         if (clicked === "") {
@@ -81,11 +91,14 @@ function Game(props) {
         }
     });
 
+    let msg = gameStage === 'wait' ? 'The game will begin soon!' : 'The round will begin soon!';
+    msg = gameStage === 'done' ? 'Good game!' : msg;
+
     return (
         <div>
             {playing && (<InGame username={username} rank={rank} score={score} clicked={clicked} click={n => userClick(n)}></InGame>)}
-            {!playing && (<Waiting username={username} rank={rank} score={score} message={"The game will begin soon!"}></Waiting>)}
+            {!playing && (<Waiting username={username} rank={rank} score={score} message={msg}> </Waiting>)}
         </div>
-    )
+    );
 }
 export default Game;
