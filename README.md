@@ -3,9 +3,6 @@ Name: Sasha Chackalackal, ID: 475454, Username: sashachack
 
 Name: Nash Solon, ID: 477477, Username: nashsolon
 
-TODO:
-Do different pages on creator page. Need to format page. Name the component CreateGame. Give option to add question and answer.
-
 ## Interactive Quiz Site Rubric
  - 30 pts - Implemented using React, Express, SASS, and Firebase
    - 10 pts - React
