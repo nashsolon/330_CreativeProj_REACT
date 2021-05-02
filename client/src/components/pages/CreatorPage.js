@@ -109,7 +109,7 @@ function QuizzesHeader(props) {
     const { socket } = useContext(GlobalContext);
     return (
         <div className="quizzesHeader">
-            <p id='logout' onClick={() => socket.emit('logout')}>Logout</p>
+            <p id='logout' onClick={() => window.location.reload()}>Logout</p>
             <strong>Quizzes</strong>
             {/* <p>Login</p> */}
         </div>

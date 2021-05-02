@@ -376,9 +376,9 @@ io.on('connection', (socket) => {
         endGame(code, socket);
     });
 
-    socket.on('logout', () => {
-        // console.log('LOGOUT THIS ONE');
-    });
+    // socket.on('logout', () => {
+    //     // console.log('LOGOUT THIS ONE');
+    // });
 
     socket.on('disconnect', () => {
         if (socket.room) {

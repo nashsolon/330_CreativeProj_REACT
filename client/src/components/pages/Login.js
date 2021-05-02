@@ -3,6 +3,7 @@ import { BackButton } from '../items'
 import GlobalContext from '../GlobalContext'
 import CreatorContext from '../context/CreatorContext'
 import firebase from 'firebase'
+import { useSpring, animated } from 'react-spring'
 
 
 // const firebaseConfig = {
@@ -63,9 +64,9 @@ function Login() {
             })
             .catch((error) => {
                 setFailure(true);
+                setTimeout(() => setFailure(false), fadeTime);
                 console.log(error.message);
-
-            })
+            });
     }
 
     // useEffect(() => {
@@ -83,6 +84,9 @@ function Login() {
 
     // }, [socket, setPage]);
 
+    const fade = useSpring({ opacity: failure ? '1' : '0' });
+    const fadeTime = 2000;
+
     return (
         <div className="loginForm">
             <form autoComplete="off" id='login_form'>
@@ -91,7 +95,7 @@ function Login() {
                 <input id="pass" placeholder="Password" onChange={n => handlePassChange(n)} type="password"></input>
                 <br></br>
                 <input id="sign_in" type="submit" value="Login" onClick={n => handleLogin(n)}></input>
-                {failure && <p className="formFailure">Invalid Email/Password</p>}
+                <animated.p className="formFailure" style={fade}>Invalid Email/Password</animated.p>
             </form>
             <BackButton page='create'> </BackButton>
         </div>

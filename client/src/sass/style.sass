@@ -9,7 +9,7 @@ $borderBottom: 3px solid #e7e7e7
 $joinColor: #9188e0
 
 $gameButtonColors: [#73d3ff, #fff675, #ff89e1, #76f7b0, #919191]
-@mixin hover1
+@mixin onHover
     filter: brightness(0.8)
     cursor: pointer
     // COMMENT
@@ -258,15 +258,21 @@ $loginInputWidth: 350px
     -o-transform: scale(-1, 1)
     -ms-transform: scale(-1, 1)
 
+    -webkit-user-select: none
+    -moz-user-select: none
+    -ms-user-select: none
+    user-select: none
+
     // text-shadow: $shadow
 
     transition: filter $tr-time
-    transition: transform $tr-time
     font-size: 30pt
 
     &:hover
         // transform: scale(-1.1, -1.1)
-        @inlude hover1
+        // color: brown
+        cursor: pointer
+        filter: brightness(0.8)
 
 #userName
     position: absolute
@@ -359,7 +365,7 @@ $text_sec: #acacac
         margin: 0
 
         &:hover
-            @include hover1
+            @include onHover
             //nice
 
 .gameButtons
