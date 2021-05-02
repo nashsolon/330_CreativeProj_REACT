@@ -19,7 +19,7 @@ Name: Nash Solon, ID: 477477, Username: nashsolon
    - 5 pts - Best Practices (Validator, Code formatted nicely)
    - 15 pts - Creative Portion
       - Users can edit and delete previously made quizzes
-      - Mobile compatibiliy for joining games
+      - Mobile compatibility for joining games
       - Implemented animations using react-spring
 
 Approved by Alex Stepansky 04/04/2021
