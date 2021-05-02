@@ -10,14 +10,16 @@ Name: Nash Solon, ID: 477477, Username: nashsolon
    - 5 pts - Firebase
    - 5 pts - SCSS/SASS
  - 50 pts - Functionality
-   - 10 pts - Creator can sign in, sign out of their account
+   - 10 pts - Creator can sign in, sign out, see their quizzes
    - 10 pts - Creators can create a new quiz
    - 10 pts - Players can join a quiz using unique quiz id
    - 10 pts - Players can see their rankings during and after quiz
-   - 10 pts - Creator can see their previously created quizzes
+   - 10 pts - Creator can see distribution of answers
  - 20 pts - Others
    - 5 pts - Best Practices (Validator, Code formatted nicely)
    - 15 pts - Creative Portion
+      - Users can edit and delete previously made quizzes
+      - Implemented animations using react-spring
 
 Approved by Alex Stepansky 04/04/2021
 
