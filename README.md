@@ -8,7 +8,7 @@ Name: Nash Solon, ID: 477477, Username: nashsolon
    - 10 pts - React
    - 10 pts - Express
    - 5 pts - Firebase
-   - 5 pts - SCSS/SASS
+   - 5 pts - SASS
  - 50 pts - Functionality
    - 10 pts - Creator can sign in and sign out of their account
    - 10 pts - Creators can create a new quiz
