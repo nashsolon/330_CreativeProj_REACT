@@ -22,6 +22,12 @@ Name: Nash Solon, ID: 477477, Username: nashsolon
       - Mobile compatibility for joining games
       - Implemented animations using react-spring
 
+Directions:
+1. Clone into local repository
+2. Run `npm start` in api folder
+3. Run `npm start` in client folder
+4. Go to localhost:<PORT>
+
 Approved by Alex Stepansky 04/04/2021
 
 
