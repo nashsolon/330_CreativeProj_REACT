@@ -24,9 +24,10 @@ Name: Nash Solon, ID: 477477, Username: nashsolon
 
 Directions:
 1. Clone into local repository
-2. Run `npm start` in api folder
-3. Run `npm start` in client folder
-4. Go to localhost:<PORT>
+2. Delete nodemodules/package-lock.json in api and client folder
+3. Run `npm install` and `npm start` in api folder
+4. Run `npm install` and `npm start` in client folder (note: Babel issue, might have to use `npm install --legacy-peer-deps`)
+5. Go to localhost:<PORT>
 
 Approved by Alex Stepansky 04/04/2021
 
