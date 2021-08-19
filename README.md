@@ -27,7 +27,7 @@ Directions:
 2. Delete nodemodules/package-lock.json in api and client folder
 3. Run `npm install` and `npm start` in api folder
 4. Run `npm install` and `npm start` in client folder (note: Babel issue, might have to use `npm install --legacy-peer-deps`)
-5. Go to localhost:<PORT>
+5. Go to localhost:3000
 
 Approved by Alex Stepansky 04/04/2021
 
