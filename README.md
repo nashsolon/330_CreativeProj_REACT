@@ -29,6 +29,9 @@ Directions:
 4. Run `npm install` and `npm start` in client folder (note: Babel issue, might have to use `npm install --legacy-peer-deps`)
 5. Go to localhost:3000
 
+NOTE: If running into npm start => no command found, make sure you delete package-lock.json in client or api
+NOTE: Running into module not found for socket.io-parser. Also delete package-lock.json in api
+
 Approved by Alex Stepansky 04/04/2021
 
 
